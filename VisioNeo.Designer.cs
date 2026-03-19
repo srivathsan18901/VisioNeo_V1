@@ -42,6 +42,7 @@
             LoadingPB = new PictureBox();
             searchBTN = new MaterialSkin.Controls.MaterialButton();
             tableLayoutPanel1 = new TableLayoutPanel();
+            panel3 = new Panel();
             panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)MaximizeBTN).BeginInit();
             ((System.ComponentModel.ISupportInitialize)CloseBTN).BeginInit();
@@ -223,12 +224,22 @@
             tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle());
             tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle());
             tableLayoutPanel1.Controls.Add(panel2, 0, 0);
+            tableLayoutPanel1.Controls.Add(panel3, 1, 0);
             tableLayoutPanel1.Location = new Point(2, 69);
             tableLayoutPanel1.Name = "tableLayoutPanel1";
             tableLayoutPanel1.RowCount = 1;
             tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
             tableLayoutPanel1.Size = new Size(1646, 705);
             tableLayoutPanel1.TabIndex = 3;
+            // 
+            // panel3
+            // 
+            panel3.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Right;
+            panel3.BackColor = Color.Gray;
+            panel3.Location = new Point(1266, 3);
+            panel3.Name = "panel3";
+            panel3.Size = new Size(377, 699);
+            panel3.TabIndex = 3;
             // 
             // VisioNeo
             // 
@@ -272,5 +283,6 @@
         private Button CnctBTN;
         private ListBox devListTBox;
         private TableLayoutPanel tableLayoutPanel1;
+        private Panel panel3;
     }
 }
