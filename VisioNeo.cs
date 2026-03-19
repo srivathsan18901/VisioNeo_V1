@@ -75,49 +75,6 @@
             }
         }
 
-        private List<string> SearchCamera()
-        {
-            List<string> devices = new List<string>();
-
-            deviceList = new MyCamera.MV_CC_DEVICE_INFO_LIST();
-
-            int result = MyCamera.MV_CC_EnumDevices_NET(
-                MyCamera.MV_GIGE_DEVICE | MyCamera.MV_USB_DEVICE,
-                ref deviceList);
-
-            if (result != MyCamera.MV_OK)
-            {
-                return devices;
-            }
-
-            for (int i = 0; i < deviceList.nDeviceNum; i++)
-            {
-                MyCamera.MV_CC_DEVICE_INFO deviceInfo =
-                    (MyCamera.MV_CC_DEVICE_INFO)Marshal.PtrToStructure(
-                        deviceList.pDeviceInfo[i],
-                        typeof(MyCamera.MV_CC_DEVICE_INFO));
-
-                if (deviceInfo.nTLayerType == MyCamera.MV_GIGE_DEVICE)
-                {
-                    var gigeInfo = (MyCamera.MV_GIGE_DEVICE_INFO)
-                        MyCamera.ByteToStruct(deviceInfo.SpecialInfo.stGigEInfo,
-                        typeof(MyCamera.MV_GIGE_DEVICE_INFO));
-
-                    string ip = $"{(gigeInfo.nCurrentIp & 0xff)}." +
-                                $"{((gigeInfo.nCurrentIp >> 8) & 0xff)}." +
-                                $"{((gigeInfo.nCurrentIp >> 16) & 0xff)}." +
-                                $"{((gigeInfo.nCurrentIp >> 24) & 0xff)}";
-
-                    string model = gigeInfo.chModelName?.Trim('\0');
-                    string name = gigeInfo.chUserDefinedName?.Trim('\0');
-
-                    devices.Add($"Hikvision - {model} - {name} ({ip})");
-                }
-            }
-
-            return devices;
-        }
-
         private void LoadingPB_Click(object sender, EventArgs e)
         {
 
@@ -222,6 +179,49 @@
             {
                 MessageBox.Show(ex.Message);
             }
+        }
+
+        private List<string> SearchCamera()
+        {
+            List<string> devices = new List<string>();
+
+            deviceList = new MyCamera.MV_CC_DEVICE_INFO_LIST();
+
+            int result = MyCamera.MV_CC_EnumDevices_NET(
+                MyCamera.MV_GIGE_DEVICE | MyCamera.MV_USB_DEVICE,
+                ref deviceList);
+
+            if (result != MyCamera.MV_OK)
+            {
+                return devices;
+            }
+
+            for (int i = 0; i < deviceList.nDeviceNum; i++)
+            {
+                MyCamera.MV_CC_DEVICE_INFO deviceInfo =
+                    (MyCamera.MV_CC_DEVICE_INFO)Marshal.PtrToStructure(
+                        deviceList.pDeviceInfo[i],
+                        typeof(MyCamera.MV_CC_DEVICE_INFO));
+
+                if (deviceInfo.nTLayerType == MyCamera.MV_GIGE_DEVICE)
+                {
+                    var gigeInfo = (MyCamera.MV_GIGE_DEVICE_INFO)
+                        MyCamera.ByteToStruct(deviceInfo.SpecialInfo.stGigEInfo,
+                        typeof(MyCamera.MV_GIGE_DEVICE_INFO));
+
+                    string ip = $"{(gigeInfo.nCurrentIp & 0xff)}." +
+                                $"{((gigeInfo.nCurrentIp >> 8) & 0xff)}." +
+                                $"{((gigeInfo.nCurrentIp >> 16) & 0xff)}." +
+                                $"{((gigeInfo.nCurrentIp >> 24) & 0xff)}";
+
+                    string model = gigeInfo.chModelName?.Trim('\0');
+                    string name = gigeInfo.chUserDefinedName?.Trim('\0');
+
+                    devices.Add($"Hikvision - {model} - {name} ({ip})");
+                }
+            }
+
+            return devices;
         }
 
         private void GrabLoop()

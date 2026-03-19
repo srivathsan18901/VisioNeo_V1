@@ -41,6 +41,7 @@
             CnctBTN = new Button();
             LoadingPB = new PictureBox();
             searchBTN = new MaterialSkin.Controls.MaterialButton();
+            tableLayoutPanel1 = new TableLayoutPanel();
             panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)MaximizeBTN).BeginInit();
             ((System.ComponentModel.ISupportInitialize)CloseBTN).BeginInit();
@@ -50,6 +51,7 @@
             ((System.ComponentModel.ISupportInitialize)VisualPB).BeginInit();
             panel2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)LoadingPB).BeginInit();
+            tableLayoutPanel1.SuspendLayout();
             SuspendLayout();
             // 
             // panel1
@@ -132,9 +134,9 @@
             VisualPB.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left;
             VisualPB.BackColor = Color.Transparent;
             VisualPB.Image = (Image)resources.GetObject("VisualPB.Image");
-            VisualPB.Location = new Point(3, 53);
+            VisualPB.Location = new Point(5, 53);
             VisualPB.Name = "VisualPB";
-            VisualPB.Size = new Size(1121, 633);
+            VisualPB.Size = new Size(1249, 643);
             VisualPB.SizeMode = PictureBoxSizeMode.StretchImage;
             VisualPB.TabIndex = 1;
             VisualPB.TabStop = false;
@@ -150,9 +152,9 @@
             panel2.Controls.Add(LoadingPB);
             panel2.Controls.Add(searchBTN);
             panel2.Controls.Add(VisualPB);
-            panel2.Location = new Point(-1, 76);
+            panel2.Location = new Point(3, 3);
             panel2.Name = "panel2";
-            panel2.Size = new Size(1127, 689);
+            panel2.Size = new Size(1257, 699);
             panel2.TabIndex = 2;
             // 
             // devListTBox
@@ -213,6 +215,21 @@
             searchBTN.UseVisualStyleBackColor = true;
             searchBTN.Click += searchBTN_Click;
             // 
+            // tableLayoutPanel1
+            // 
+            tableLayoutPanel1.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
+            tableLayoutPanel1.BackColor = Color.Transparent;
+            tableLayoutPanel1.ColumnCount = 2;
+            tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle());
+            tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle());
+            tableLayoutPanel1.Controls.Add(panel2, 0, 0);
+            tableLayoutPanel1.Location = new Point(2, 69);
+            tableLayoutPanel1.Name = "tableLayoutPanel1";
+            tableLayoutPanel1.RowCount = 1;
+            tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
+            tableLayoutPanel1.Size = new Size(1646, 705);
+            tableLayoutPanel1.TabIndex = 3;
+            // 
             // VisioNeo
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
@@ -220,7 +237,7 @@
             BackgroundImage = (Image)resources.GetObject("$this.BackgroundImage");
             BackgroundImageLayout = ImageLayout.Stretch;
             ClientSize = new Size(1649, 766);
-            Controls.Add(panel2);
+            Controls.Add(tableLayoutPanel1);
             Controls.Add(panel1);
             FormBorderStyle = FormBorderStyle.None;
             Icon = (Icon)resources.GetObject("$this.Icon");
@@ -236,6 +253,7 @@
             panel2.ResumeLayout(false);
             panel2.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)LoadingPB).EndInit();
+            tableLayoutPanel1.ResumeLayout(false);
             ResumeLayout(false);
         }
 
@@ -253,5 +271,6 @@
         private PictureBox LoadingPB;
         private Button CnctBTN;
         private ListBox devListTBox;
+        private TableLayoutPanel tableLayoutPanel1;
     }
 }
