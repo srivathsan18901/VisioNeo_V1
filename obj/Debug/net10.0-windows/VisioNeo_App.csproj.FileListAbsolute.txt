@@ -1,0 +1,42 @@
+C:\Users\Srivathsan Ganesan\source\repos\VisioNeo_App\bin\Debug\net10.0-windows\VisioNeo_App.exe
+C:\Users\Srivathsan Ganesan\source\repos\VisioNeo_App\bin\Debug\net10.0-windows\VisioNeo_App.deps.json
+C:\Users\Srivathsan Ganesan\source\repos\VisioNeo_App\bin\Debug\net10.0-windows\VisioNeo_App.runtimeconfig.json
+C:\Users\Srivathsan Ganesan\source\repos\VisioNeo_App\bin\Debug\net10.0-windows\VisioNeo_App.dll
+C:\Users\Srivathsan Ganesan\source\repos\VisioNeo_App\bin\Debug\net10.0-windows\VisioNeo_App.pdb
+C:\Users\Srivathsan Ganesan\source\repos\VisioNeo_App\obj\Debug\net10.0-windows\VisioNeo_App.VisioNeo.resources
+C:\Users\Srivathsan Ganesan\source\repos\VisioNeo_App\obj\Debug\net10.0-windows\VisioNeo_App.csproj.GenerateResource.cache
+C:\Users\Srivathsan Ganesan\source\repos\VisioNeo_App\obj\Debug\net10.0-windows\VisioNeo_App.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\Srivathsan Ganesan\source\repos\VisioNeo_App\obj\Debug\net10.0-windows\VisioNeo_App.AssemblyInfoInputs.cache
+C:\Users\Srivathsan Ganesan\source\repos\VisioNeo_App\obj\Debug\net10.0-windows\VisioNeo_App.AssemblyInfo.cs
+C:\Users\Srivathsan Ganesan\source\repos\VisioNeo_App\obj\Debug\net10.0-windows\VisioNeo_App.csproj.CoreCompileInputs.cache
+C:\Users\Srivathsan Ganesan\source\repos\VisioNeo_App\obj\Debug\net10.0-windows\VisioNeo_App.dll
+C:\Users\Srivathsan Ganesan\source\repos\VisioNeo_App\obj\Debug\net10.0-windows\refint\VisioNeo_App.dll
+C:\Users\Srivathsan Ganesan\source\repos\VisioNeo_App\obj\Debug\net10.0-windows\VisioNeo_App.pdb
+C:\Users\Srivathsan Ganesan\source\repos\VisioNeo_App\obj\Debug\net10.0-windows\VisioNeo_App.genruntimeconfig.cache
+C:\Users\Srivathsan Ganesan\source\repos\VisioNeo_App\obj\Debug\net10.0-windows\ref\VisioNeo_App.dll
+C:\Users\Srivathsan Ganesan\source\repos\VisioNeo_App\bin\Debug\net10.0-windows\MaterialSkin.dll
+C:\Users\Srivathsan Ganesan\source\repos\VisioNeo_App\bin\Debug\net10.0-windows\MvCameraControl.Net.dll
+C:\Users\Srivathsan Ganesan\source\repos\VisioNeo_App\obj\Debug\net10.0-windows\VisioNeo_App.csproj.AssemblyReference.cache
+C:\Users\Srivathsan Ganesan\source\repos\VisioNeo_App\obj\Debug\net10.0-windows\VisioNeo_App.Properties.Resources.resources
+C:\Users\Srivathsan Ganesan\source\repos\VisioNeo_App\obj\Debug\net10.0-windows\VisioNeo.6EC67B77.Up2Date
+D:\Srivathsan\Dev\VisioNeo_App\bin\Debug\net10.0-windows\VisioNeo_App.exe
+D:\Srivathsan\Dev\VisioNeo_App\bin\Debug\net10.0-windows\VisioNeo_App.deps.json
+D:\Srivathsan\Dev\VisioNeo_App\bin\Debug\net10.0-windows\VisioNeo_App.runtimeconfig.json
+D:\Srivathsan\Dev\VisioNeo_App\bin\Debug\net10.0-windows\VisioNeo_App.dll
+D:\Srivathsan\Dev\VisioNeo_App\bin\Debug\net10.0-windows\VisioNeo_App.pdb
+D:\Srivathsan\Dev\VisioNeo_App\bin\Debug\net10.0-windows\MaterialSkin.dll
+D:\Srivathsan\Dev\VisioNeo_App\bin\Debug\net10.0-windows\MvCameraControl.Net.dll
+D:\Srivathsan\Dev\VisioNeo_App\obj\Debug\net10.0-windows\VisioNeo_App.csproj.AssemblyReference.cache
+D:\Srivathsan\Dev\VisioNeo_App\obj\Debug\net10.0-windows\VisioNeo_App.Properties.Resources.resources
+D:\Srivathsan\Dev\VisioNeo_App\obj\Debug\net10.0-windows\VisioNeo_App.VisioNeo.resources
+D:\Srivathsan\Dev\VisioNeo_App\obj\Debug\net10.0-windows\VisioNeo_App.csproj.GenerateResource.cache
+D:\Srivathsan\Dev\VisioNeo_App\obj\Debug\net10.0-windows\VisioNeo_App.GeneratedMSBuildEditorConfig.editorconfig
+D:\Srivathsan\Dev\VisioNeo_App\obj\Debug\net10.0-windows\VisioNeo_App.AssemblyInfoInputs.cache
+D:\Srivathsan\Dev\VisioNeo_App\obj\Debug\net10.0-windows\VisioNeo_App.AssemblyInfo.cs
+D:\Srivathsan\Dev\VisioNeo_App\obj\Debug\net10.0-windows\VisioNeo_App.csproj.CoreCompileInputs.cache
+D:\Srivathsan\Dev\VisioNeo_App\obj\Debug\net10.0-windows\VisioNeo.6EC67B77.Up2Date
+D:\Srivathsan\Dev\VisioNeo_App\obj\Debug\net10.0-windows\VisioNeo_App.dll
+D:\Srivathsan\Dev\VisioNeo_App\obj\Debug\net10.0-windows\refint\VisioNeo_App.dll
+D:\Srivathsan\Dev\VisioNeo_App\obj\Debug\net10.0-windows\VisioNeo_App.pdb
+D:\Srivathsan\Dev\VisioNeo_App\obj\Debug\net10.0-windows\VisioNeo_App.genruntimeconfig.cache
+D:\Srivathsan\Dev\VisioNeo_App\obj\Debug\net10.0-windows\ref\VisioNeo_App.dll
