@@ -20,7 +20,6 @@
             LoadingPB.Visible = false;
             CnctBTN.Visible = false;
             devListTBox.Visible = false;
-            VisualPB.Image = Properties.Resources.No_Data_Founds;
             VisualPB.SizeMode = PictureBoxSizeMode.StretchImage;
         }
 
@@ -237,37 +236,41 @@
                 {
                     try
                     {
-                        int width = frame.stFrameInfo.nWidth;
-                        int height = frame.stFrameInfo.nHeight;
+                        MyCamera.MV_PIXEL_CONVERT_PARAM convert = new MyCamera.MV_PIXEL_CONVERT_PARAM();
 
-                        byte[] buffer = new byte[frame.stFrameInfo.nFrameLen];
-                        Marshal.Copy(frame.pBufAddr, buffer, 0, buffer.Length);
+                        convert.nWidth = frame.stFrameInfo.nWidth;
+                        convert.nHeight = frame.stFrameInfo.nHeight;
+                        convert.pSrcData = frame.pBufAddr;
+                        convert.nSrcDataLen = frame.stFrameInfo.nFrameLen;
+                        convert.enSrcPixelType = frame.stFrameInfo.enPixelType;
+                        convert.enDstPixelType = MyCamera.MvGvspPixelType.PixelType_Gvsp_BGR8_Packed;
 
-                        Bitmap bmp = new Bitmap(width, height, PixelFormat.Format8bppIndexed);
+                        int bufferSize = convert.nWidth * convert.nHeight * 3;
+                        byte[] rgbBuffer = new byte[bufferSize];
 
-                        // Set grayscale palette
-                        ColorPalette palette = bmp.Palette;
-                        for (int i = 0; i < 256; i++)
-                        {
-                            palette.Entries[i] = Color.FromArgb(i, i, i);
-                        }
-                        bmp.Palette = palette;
+                        GCHandle handle = GCHandle.Alloc(rgbBuffer, GCHandleType.Pinned);
+                        convert.pDstBuffer = handle.AddrOfPinnedObject();
+                        convert.nDstBufferSize = (uint)bufferSize;
 
-                        BitmapData bmpData = bmp.LockBits(
-                            new Rectangle(0, 0, width, height),
-                            ImageLockMode.WriteOnly,
-                            bmp.PixelFormat);
+                        camera.MV_CC_ConvertPixelType_NET(ref convert);
 
-                        Marshal.Copy(buffer, 0, bmpData.Scan0, buffer.Length);
-                        bmp.UnlockBits(bmpData);
+                        Bitmap bmp = new Bitmap(
+                            convert.nWidth,
+                            convert.nHeight,
+                            convert.nWidth * 3,
+                            PixelFormat.Format24bppRgb,
+                            convert.pDstBuffer
+                        );
 
                         VisualPB.Invoke(new Action(() =>
                         {
-                            if (!isConnected) return; // 🔥 IMPORTANT FIX
+                            if (!isConnected) return;
 
                             VisualPB.Image?.Dispose();
-                            VisualPB.Image = bmp;
+                            VisualPB.Image = (Bitmap)bmp.Clone();
                         }));
+
+                        handle.Free();
                     }
                     catch { }
 

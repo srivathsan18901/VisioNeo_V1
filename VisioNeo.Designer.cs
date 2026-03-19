@@ -134,7 +134,7 @@
             VisualPB.Image = (Image)resources.GetObject("VisualPB.Image");
             VisualPB.Location = new Point(3, 53);
             VisualPB.Name = "VisualPB";
-            VisualPB.Size = new Size(1028, 633);
+            VisualPB.Size = new Size(1121, 633);
             VisualPB.SizeMode = PictureBoxSizeMode.StretchImage;
             VisualPB.TabIndex = 1;
             VisualPB.TabStop = false;
@@ -152,7 +152,7 @@
             panel2.Controls.Add(VisualPB);
             panel2.Location = new Point(-1, 76);
             panel2.Name = "panel2";
-            panel2.Size = new Size(1034, 689);
+            panel2.Size = new Size(1127, 689);
             panel2.TabIndex = 2;
             // 
             // devListTBox
@@ -205,7 +205,7 @@
             searchBTN.MouseState = MaterialSkin.MouseState.HOVER;
             searchBTN.Name = "searchBTN";
             searchBTN.NoAccentTextColor = Color.Empty;
-            searchBTN.Size = new Size(141, 36);
+            searchBTN.Size = new Size(129, 36);
             searchBTN.TabIndex = 2;
             searchBTN.Text = "Search Vision";
             searchBTN.Type = MaterialSkin.Controls.MaterialButton.MaterialButtonType.Contained;
