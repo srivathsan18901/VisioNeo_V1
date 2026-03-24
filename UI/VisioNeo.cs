@@ -6,13 +6,11 @@
 
     public partial class VisioNeo : Form
     {
-
         MyCamera camera = new MyCamera();
         MyCamera.MV_CC_DEVICE_INFO_LIST deviceList;
         Thread grabThread;
         bool isGrabbing = false;
         bool isConnected = false;
-
 
         public VisioNeo()
         {
