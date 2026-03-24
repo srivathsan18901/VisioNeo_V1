@@ -3,6 +3,7 @@
     using MvCamCtrl.NET;
     using System.Drawing.Imaging;
     using System.Runtime.InteropServices;
+    using System.Threading;
 
     public partial class VisioNeo : Form
     {
@@ -12,13 +13,34 @@
         bool isGrabbing = false;
         bool isConnected = false;
 
+
+
         public VisioNeo()
         {
             InitializeComponent();
             LoadingPB.Visible = false;
             CnctBTN.Visible = false;
+            Param_Panel.Visible = false;
+            RGB_panel.Visible = false;
             devListTBox.Visible = false;
             VisualPB.SizeMode = PictureBoxSizeMode.StretchImage;
+
+
+
+            // Trackbar ranges (typical Hikvision range)
+            tbRed.Minimum = 0;
+            tbRed.Maximum = 255;
+
+            tbGreen.Minimum = 0;
+            tbGreen.Maximum = 255;
+
+            tbBlue.Minimum = 0;
+            tbBlue.Maximum = 255;
+
+            // Default values
+            tbRed.Value = 100;
+            tbGreen.Value = 100;
+            tbBlue.Value = 100;
         }
 
         private void MinimizeBTN_Click(object sender, EventArgs e)
@@ -100,6 +122,16 @@
                     camera.MV_CC_StopGrabbing_NET();
                     camera.MV_CC_CloseDevice_NET();
                     camera.MV_CC_DestroyDevice_NET();
+                    // Exposure default
+                    camera.MV_CC_SetEnumValue_NET("ExposureAuto", 0);
+                    camera.MV_CC_SetFloatValue_NET("ExposureTime", 10000);
+
+                    // Gain default
+                    camera.MV_CC_SetFloatValue_NET("Gain", 5);
+                    // White balance auto
+                    camera.MV_CC_SetEnumValue_NET("BalanceWhiteAuto", 1);
+                    Exp_lbl.Text = $"Exposure: {GetExposure():F0}";
+                    Gain_lbl.Text = $"Gain: {GetGain():F1}";
 
                     // Show GIF
                     VisualPB.Image = new Bitmap(Properties.Resources.No_Data_Founds);
@@ -114,6 +146,7 @@
                     CnctBTN.ForeColor = Color.SeaGreen;
 
                     isConnected = false;
+                    Param_Panel.Visible = false;
                 }
                 catch (Exception ex)
                 {
@@ -162,6 +195,59 @@
 
                 camera.MV_CC_StartGrabbing_NET();
 
+                float currentExposure = GetExposure();
+
+                // Example range (adjust as per your camera)
+                exposureTrackBar.Minimum = 10000;
+                exposureTrackBar.Maximum = 1000000;
+
+                // Clamp (safety)
+                currentExposure = Math.Max(exposureTrackBar.Minimum, currentExposure);
+                currentExposure = Math.Min(exposureTrackBar.Maximum, currentExposure);
+
+                exposureTrackBar.Value = (int)currentExposure;
+
+                Exp_lbl.Text = $"{currentExposure:F0}";
+
+                float currentGain = GetGain();
+
+                // Typical Hikvision range (adjust if needed)
+                gainTrackBar.Minimum = 0;
+                gainTrackBar.Maximum = 20;
+
+                // Clamp
+                currentGain = Math.Max(gainTrackBar.Minimum, currentGain);
+                currentGain = Math.Min(gainTrackBar.Maximum, currentGain);
+
+                gainTrackBar.Value = (int)currentGain;
+
+                Gain_lbl.Text = $"{currentGain:F1}";
+
+                float r = GetWhiteBalance(0);
+                float g = GetWhiteBalance(1);
+                float b = GetWhiteBalance(2);
+
+
+                // Typical range (adjust if needed)
+                tbRed.Minimum = 0;
+                tbRed.Maximum = 255;
+
+                tbGreen.Minimum = 0;
+                tbGreen.Maximum = 255;
+
+                tbBlue.Minimum = 0;
+                tbBlue.Maximum = 255;
+
+                // Clamp & assign
+                tbRed.Value = (int)Math.Min(tbRed.Maximum, r);
+                tbGreen.Value = (int)Math.Min(tbGreen.Maximum, g);
+                tbBlue.Value = (int)Math.Min(tbBlue.Maximum, b);
+
+                // Labels
+                lblR.Text = tbRed.Value.ToString();
+                lblG.Text = tbGreen.Value.ToString();
+                lblB.Text = tbBlue.Value.ToString();
+
                 isGrabbing = true;
                 grabThread = new Thread(GrabLoop);
                 grabThread.IsBackground = true;
@@ -172,6 +258,7 @@
                 CnctBTN.ForeColor = Color.Red;
 
                 isConnected = true;
+                Param_Panel.Visible = true;
             }
             catch (Exception ex)
             {
@@ -242,6 +329,7 @@
                         convert.nSrcDataLen = frame.stFrameInfo.nFrameLen;
                         convert.enSrcPixelType = frame.stFrameInfo.enPixelType;
                         convert.enDstPixelType = MyCamera.MvGvspPixelType.PixelType_Gvsp_BGR8_Packed;
+                        //convert.enDstPixelType = MyCamera.MvGvspPixelType.PixelType_Gvsp_RGB8_Packed;
 
                         int bufferSize = convert.nWidth * convert.nHeight * 3;
                         byte[] rgbBuffer = new byte[bufferSize];
@@ -260,6 +348,7 @@
                             convert.pDstBuffer
                         );
 
+
                         VisualPB.Invoke(new Action(() =>
                         {
                             if (!isConnected) return;
@@ -277,5 +366,119 @@
             }
         }
 
+        private void SetExposure(float exposureValue)
+        {
+            camera.MV_CC_SetEnumValue_NET("ExposureAuto", 0); // OFF auto
+            camera.MV_CC_SetFloatValue_NET("ExposureTime", exposureValue);
+        }
+
+        private void SetGain(float gainValue)
+        {
+            camera.MV_CC_SetFloatValue_NET("Gain", gainValue);
+        }
+
+        private float GetExposure()
+        {
+            MyCamera.MVCC_FLOATVALUE val = new MyCamera.MVCC_FLOATVALUE();
+            camera.MV_CC_GetFloatValue_NET("ExposureTime", ref val);
+            return val.fCurValue;
+        }
+
+        private float GetGain()
+        {
+            MyCamera.MVCC_FLOATVALUE val = new MyCamera.MVCC_FLOATVALUE();
+            camera.MV_CC_GetFloatValue_NET("Gain", ref val);
+            return val.fCurValue;
+        }
+
+        private float GetWhiteBalance(int channel) // 0=R,1=G,2=B
+        {
+            camera.MV_CC_SetEnumValue_NET("BalanceRatioSelector", (uint)channel);
+
+            MyCamera.MVCC_FLOATVALUE val = new MyCamera.MVCC_FLOATVALUE();
+            camera.MV_CC_GetFloatValue_NET("BalanceRatio", ref val);
+
+            return val.fCurValue;
+        }
+
+        private void Gain_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void exposureTrackBar_Scroll_1(object sender, EventArgs e)
+        {
+            float exposure = exposureTrackBar.Value;
+
+            SetExposure(exposure);
+
+            Exp_lbl.Text = $"({exposure:F0} µs)";
+        }
+
+        private void gainTrackBar_Scroll(object sender, EventArgs e)
+        {
+            float gain = gainTrackBar.Value;
+            SetGain(gain);
+            Gain_lbl.Text = $"{gain:F1}";
+        }
+
+        private void SetWhiteBalance(float red, float green, float blue)
+        {
+            camera.MV_CC_SetEnumValue_NET("BalanceWhiteAuto", 0);
+
+            camera.MV_CC_SetEnumValue_NET("BalanceRatioSelector", 0); // Red
+            camera.MV_CC_SetFloatValue_NET("BalanceRatio", red);
+
+            camera.MV_CC_SetEnumValue_NET("BalanceRatioSelector", 1); // Green
+            camera.MV_CC_SetFloatValue_NET("BalanceRatio", green);
+
+            camera.MV_CC_SetEnumValue_NET("BalanceRatioSelector", 2); // Blue
+            camera.MV_CC_SetFloatValue_NET("BalanceRatio", blue);
+        }
+
+        private void btnAutoWB_Click(object sender, EventArgs e)
+        {
+            if (!isConnected) return;
+            camera.MV_CC_SetEnumValue_NET("BalanceWhiteAuto", 1);
+        }
+
+        private void tbRed_Scroll(object sender, EventArgs e)
+        {
+            lblR.Text = tbRed.Value.ToString();
+            ApplyManualWB();
+        }
+
+        private void tbGreen_Scroll(object sender, EventArgs e)
+        {
+            lblG.Text = tbGreen.Value.ToString();
+            ApplyManualWB();
+        }
+
+        private void tbBlue_Scroll(object sender, EventArgs e)
+        {
+            lblB.Text = tbBlue.Value.ToString();
+            ApplyManualWB();
+        }
+
+        private void ApplyManualWB()
+        {
+            if (!isConnected) return;
+            SetWhiteBalance(tbRed.Value, tbGreen.Value, tbBlue.Value);
+        }
+
+        private void btnManualWB_Click(object sender, EventArgs e)
+        {
+            RGB_panel.Visible = true;
+            camera.MV_CC_SetEnumValue_NET("BalanceWhiteAuto", 0);
+
+            // Sync UI with current camera WB
+            float r = GetWhiteBalance(0);
+            float g = GetWhiteBalance(1);
+            float b = GetWhiteBalance(2);
+
+            tbRed.Value = (int)r;
+            tbGreen.Value = (int)g;
+            tbBlue.Value = (int)b;
+        }
     }
 }
