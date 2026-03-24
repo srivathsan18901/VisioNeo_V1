@@ -439,6 +439,7 @@
         private void btnAutoWB_Click(object sender, EventArgs e)
         {
             if (!isConnected) return;
+            RGB_panel.Visible = false;
             camera.MV_CC_SetEnumValue_NET("BalanceWhiteAuto", 1);
         }
 
