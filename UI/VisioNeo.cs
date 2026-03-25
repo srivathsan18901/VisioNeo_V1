@@ -12,6 +12,14 @@
         Thread grabThread;
         bool isGrabbing = false;
         bool isConnected = false;
+        enum DisplayMode
+        {
+            Normal,
+            Grayscale,
+            Heatmap
+        }
+
+        DisplayMode currentDisplayMode = DisplayMode.Normal;
 
         public VisioNeo()
         {
@@ -21,6 +29,32 @@
             Param_Panel.Visible = false;
             devListTBox.Visible = false;
             VisualPB.SizeMode = PictureBoxSizeMode.StretchImage;
+
+            // Brightness
+            tbBrightness.Minimum = 0;
+            tbBrightness.Maximum = 255;
+
+            // Contrast
+            tbContrast.Minimum = 0;
+            tbContrast.Maximum = 255;
+
+            // Sharpness
+            tbSharpness.Minimum = 0;
+            tbSharpness.Maximum = 100;
+
+            // Saturation
+            tbSaturation.Minimum = 0;
+            tbSaturation.Maximum = 255;
+
+            // Frame Rate
+            tbFrameRate.Minimum = 1;
+            tbFrameRate.Maximum = 60;
+
+            cbDisplayMode.Items.Add("Normal");
+            cbDisplayMode.Items.Add("Grayscale");
+            cbDisplayMode.Items.Add("Heatmap");
+
+            cbDisplayMode.SelectedIndex = 0;
         }
 
         private void MinimizeBTN_Click(object sender, EventArgs e)
@@ -203,6 +237,31 @@
 
                 Gain_lbl.Text = $"{currentGain:F1}";
 
+                // Brightness
+                int brightness = GetBrightness();
+                tbBrightness.Value = Math.Min(tbBrightness.Maximum, brightness);
+                lblBrightness.Text = brightness.ToString();
+
+                // Contrast
+                int contrast = GetContrast();
+                tbContrast.Value = Math.Min(tbContrast.Maximum, contrast);
+                lblContrast.Text = contrast.ToString();
+
+                // Sharpness
+                int sharpness = GetSharpness();
+                tbSharpness.Value = Math.Min(tbSharpness.Maximum, sharpness);
+                lblSharpness.Text = sharpness.ToString();
+
+                // Saturation
+                int saturation = GetSaturation();
+                tbSaturation.Value = Math.Min(tbSaturation.Maximum, saturation);
+                lblSaturation.Text = saturation.ToString();
+
+                // Frame Rate
+                float fps = GetFrameRate();
+                tbFrameRate.Value = (int)Math.Min(tbFrameRate.Maximum, fps);
+                lblFPS.Text = $"{fps:F1}";
+
                 isGrabbing = true;
                 grabThread = new Thread(GrabLoop);
                 grabThread.IsBackground = true;
@@ -308,8 +367,10 @@
                         {
                             if (!isConnected) return;
 
+                            Bitmap finalImage = ProcessDisplayMode(bmp);
+
                             VisualPB.Image?.Dispose();
-                            VisualPB.Image = (Bitmap)bmp.Clone();
+                            VisualPB.Image = finalImage;
                         }));
 
                         handle.Free();
@@ -321,29 +382,19 @@
             }
         }
 
-        private void SetExposure(float exposureValue)
+        private Bitmap ProcessDisplayMode(Bitmap input)
         {
-            camera.MV_CC_SetEnumValue_NET("ExposureAuto", 0); // OFF auto
-            camera.MV_CC_SetFloatValue_NET("ExposureTime", exposureValue);
-        }
+            switch (currentDisplayMode)
+            {
+                case DisplayMode.Grayscale:
+                    return ConvertToGrayscale(input);
 
-        private void SetGain(float gainValue)
-        {
-            camera.MV_CC_SetFloatValue_NET("Gain", gainValue);
-        }
+                case DisplayMode.Heatmap:
+                    return ConvertToHeatmap(input);
 
-        private float GetExposure()
-        {
-            MyCamera.MVCC_FLOATVALUE val = new MyCamera.MVCC_FLOATVALUE();
-            camera.MV_CC_GetFloatValue_NET("ExposureTime", ref val);
-            return val.fCurValue;
-        }
-
-        private float GetGain()
-        {
-            MyCamera.MVCC_FLOATVALUE val = new MyCamera.MVCC_FLOATVALUE();
-            camera.MV_CC_GetFloatValue_NET("Gain", ref val);
-            return val.fCurValue;
+                default:
+                    return (Bitmap)input.Clone();
+            }
         }
 
         private void Gain_Click(object sender, EventArgs e)
@@ -370,6 +421,190 @@
         private void Param_Panel_Paint(object sender, PaintEventArgs e)
         {
 
+        }
+
+        private void SetBrightness(int value)
+        {
+            camera.MV_CC_SetIntValue_NET("Brightness", (uint)value);
+        }
+
+        private int GetBrightness()
+        {
+            MyCamera.MVCC_INTVALUE val = new MyCamera.MVCC_INTVALUE();
+            camera.MV_CC_GetIntValue_NET("Brightness", ref val);
+            return (int)val.nCurValue;
+        }
+
+        private void SetContrast(int value)
+        {
+            camera.MV_CC_SetIntValue_NET("Contrast", (uint)value);
+        }
+
+        private int GetContrast()
+        {
+            MyCamera.MVCC_INTVALUE val = new MyCamera.MVCC_INTVALUE();
+            camera.MV_CC_GetIntValue_NET("Contrast", ref val);
+            return (int)val.nCurValue;
+        }
+
+        private void SetSharpness(int value)
+        {
+            camera.MV_CC_SetIntValue_NET("Sharpness", (uint)value);
+        }
+
+        private int GetSharpness()
+        {
+            MyCamera.MVCC_INTVALUE val = new MyCamera.MVCC_INTVALUE();
+            camera.MV_CC_GetIntValue_NET("Sharpness", ref val);
+            return (int)val.nCurValue;
+        }
+
+        private void SetSaturation(int value)
+        {
+            camera.MV_CC_SetIntValue_NET("Saturation", (uint)value);
+        }
+
+        private int GetSaturation()
+        {
+            MyCamera.MVCC_INTVALUE val = new MyCamera.MVCC_INTVALUE();
+            camera.MV_CC_GetIntValue_NET("Saturation", ref val);
+            return (int)val.nCurValue;
+        }
+
+        private void SetFrameRate(float value)
+        {
+            camera.MV_CC_SetFloatValue_NET("AcquisitionFrameRate", value);
+        }
+
+        private float GetFrameRate()
+        {
+            MyCamera.MVCC_FLOATVALUE val = new MyCamera.MVCC_FLOATVALUE();
+            camera.MV_CC_GetFloatValue_NET("AcquisitionFrameRate", ref val);
+            return val.fCurValue;
+        }
+
+        private void SetExposure(float exposureValue)
+        {
+            camera.MV_CC_SetEnumValue_NET("ExposureAuto", 0); // OFF auto
+            camera.MV_CC_SetFloatValue_NET("ExposureTime", exposureValue);
+        }
+
+        private float GetExposure()
+        {
+            MyCamera.MVCC_FLOATVALUE val = new MyCamera.MVCC_FLOATVALUE();
+            camera.MV_CC_GetFloatValue_NET("ExposureTime", ref val);
+            return val.fCurValue;
+        }
+
+        private void SetGain(float gainValue)
+        {
+            camera.MV_CC_SetFloatValue_NET("Gain", gainValue);
+        }
+
+        private float GetGain()
+        {
+            MyCamera.MVCC_FLOATVALUE val = new MyCamera.MVCC_FLOATVALUE();
+            camera.MV_CC_GetFloatValue_NET("Gain", ref val);
+            return val.fCurValue;
+        }
+
+        private void tbBrightness_Scroll(object sender, EventArgs e)
+        {
+            int val = tbBrightness.Value;
+            SetBrightness(val);
+            lblBrightness.Text = val.ToString();
+        }
+
+        private void tbContrast_Scroll(object sender, EventArgs e)
+        {
+            int val = tbContrast.Value;
+            SetContrast(val);
+            lblContrast.Text = val.ToString();
+        }
+
+        private void tbSharpness_Scroll(object sender, EventArgs e)
+        {
+            int val = tbSharpness.Value;
+            SetSharpness(val);
+            lblSharpness.Text = val.ToString();
+        }
+
+        private void tbSaturation_Scroll(object sender, EventArgs e)
+        {
+            int val = tbSaturation.Value;
+            SetSaturation(val);
+            lblSaturation.Text = val.ToString();
+        }
+
+        private void tbFrameRate_Scroll(object sender, EventArgs e)
+        {
+            float val = tbFrameRate.Value;
+            SetFrameRate(val);
+            lblFPS.Text = $"{val:F1}";
+        }
+        private void cbDisplayMode_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            currentDisplayMode = (DisplayMode)cbDisplayMode.SelectedIndex;
+        }
+
+        private Bitmap ConvertToGrayscale(Bitmap original)
+        {
+            Bitmap gray = new Bitmap(original.Width, original.Height);
+
+            using (Graphics g = Graphics.FromImage(gray))
+            {
+                ColorMatrix colorMatrix = new ColorMatrix(new float[][]
+                {
+            new float[] {0.3f, 0.3f, 0.3f, 0, 0},
+            new float[] {0.59f,0.59f,0.59f,0,0},
+            new float[] {0.11f,0.11f,0.11f,0,0},
+            new float[] {0,0,0,1,0},
+            new float[] {0,0,0,0,1}
+                });
+
+                ImageAttributes attributes = new ImageAttributes();
+                attributes.SetColorMatrix(colorMatrix);
+
+                g.DrawImage(original,
+                    new Rectangle(0, 0, original.Width, original.Height),
+                    0, 0, original.Width, original.Height,
+                    GraphicsUnit.Pixel, attributes);
+            }
+
+            return gray;
+        }
+
+        private Bitmap ConvertToHeatmap(Bitmap original)
+        {
+            Bitmap heatmap = new Bitmap(original.Width, original.Height);
+
+            for (int y = 0; y < original.Height; y++)
+            {
+                for (int x = 0; x < original.Width; x++)
+                {
+                    Color pixel = original.GetPixel(x, y);
+
+                    int intensity = (pixel.R + pixel.G + pixel.B) / 3;
+
+                    Color heatColor = GetHeatColor(intensity);
+
+                    heatmap.SetPixel(x, y, heatColor);
+                }
+            }
+
+            return heatmap;
+        }
+
+        private Color GetHeatColor(int value)
+        {
+            if (value < 85)
+                return Color.FromArgb(0, value * 3, 255); // Blue → Cyan
+
+            else if (value < 170)
+                return Color.FromArgb((value - 85) * 3, 255, 255 - (value - 85) * 3); // Green → Yellow
+
+            else
+                return Color.FromArgb(255, 255 - (value - 170) * 3, 0); // Yellow → Red
         }
     }
 }
