@@ -43,18 +43,8 @@
             searchBTN = new MaterialSkin.Controls.MaterialButton();
             tableLayoutPanel1 = new TableLayoutPanel();
             Param_Panel = new Panel();
-            RGB_panel = new Panel();
-            tbBlue = new TrackBar();
-            tbRed = new TrackBar();
-            tbGreen = new TrackBar();
-            lblR = new Label();
-            lblB = new Label();
-            lblG = new Label();
-            btnManualWB = new MaterialSkin.Controls.MaterialButton();
             Gain_lbl = new Label();
             Exp_lbl = new Label();
-            btnAutoWB = new MaterialSkin.Controls.MaterialButton();
-            label2 = new Label();
             Gain = new Label();
             Exposure = new Label();
             label1 = new Label();
@@ -71,10 +61,6 @@
             ((System.ComponentModel.ISupportInitialize)LoadingPB).BeginInit();
             tableLayoutPanel1.SuspendLayout();
             Param_Panel.SuspendLayout();
-            RGB_panel.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)tbBlue).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)tbRed).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)tbGreen).BeginInit();
             ((System.ComponentModel.ISupportInitialize)gainTrackBar).BeginInit();
             ((System.ComponentModel.ISupportInitialize)exposureTrackBar).BeginInit();
             SuspendLayout();
@@ -259,12 +245,8 @@
             // 
             // Param_Panel
             // 
-            Param_Panel.Controls.Add(RGB_panel);
-            Param_Panel.Controls.Add(btnManualWB);
             Param_Panel.Controls.Add(Gain_lbl);
             Param_Panel.Controls.Add(Exp_lbl);
-            Param_Panel.Controls.Add(btnAutoWB);
-            Param_Panel.Controls.Add(label2);
             Param_Panel.Controls.Add(Gain);
             Param_Panel.Controls.Add(Exposure);
             Param_Panel.Controls.Add(label1);
@@ -274,102 +256,7 @@
             Param_Panel.Name = "Param_Panel";
             Param_Panel.Size = new Size(380, 696);
             Param_Panel.TabIndex = 3;
-            // 
-            // RGB_panel
-            // 
-            RGB_panel.Controls.Add(tbBlue);
-            RGB_panel.Controls.Add(tbRed);
-            RGB_panel.Controls.Add(tbGreen);
-            RGB_panel.Controls.Add(lblR);
-            RGB_panel.Controls.Add(lblB);
-            RGB_panel.Controls.Add(lblG);
-            RGB_panel.Location = new Point(3, 274);
-            RGB_panel.Name = "RGB_panel";
-            RGB_panel.Size = new Size(374, 205);
-            RGB_panel.TabIndex = 18;
-            // 
-            // tbBlue
-            // 
-            tbBlue.BackColor = SystemColors.ControlLightLight;
-            tbBlue.Location = new Point(80, 147);
-            tbBlue.Name = "tbBlue";
-            tbBlue.Size = new Size(289, 45);
-            tbBlue.TabIndex = 11;
-            tbBlue.Scroll += tbBlue_Scroll;
-            // 
-            // tbRed
-            // 
-            tbRed.BackColor = SystemColors.ControlLightLight;
-            tbRed.Location = new Point(80, 20);
-            tbRed.Name = "tbRed";
-            tbRed.Size = new Size(289, 45);
-            tbRed.TabIndex = 9;
-            tbRed.Scroll += tbRed_Scroll;
-            // 
-            // tbGreen
-            // 
-            tbGreen.BackColor = SystemColors.ControlLightLight;
-            tbGreen.Location = new Point(80, 83);
-            tbGreen.Name = "tbGreen";
-            tbGreen.Size = new Size(289, 45);
-            tbGreen.TabIndex = 10;
-            tbGreen.Scroll += tbGreen_Scroll;
-            // 
-            // lblR
-            // 
-            lblR.AutoSize = true;
-            lblR.Font = new Font("Calibri", 12F, FontStyle.Bold | FontStyle.Italic);
-            lblR.ForeColor = SystemColors.Highlight;
-            lblR.Location = new Point(17, 33);
-            lblR.Name = "lblR";
-            lblR.Size = new Size(34, 19);
-            lblR.TabIndex = 12;
-            lblR.Text = "Red";
-            // 
-            // lblB
-            // 
-            lblB.AutoSize = true;
-            lblB.Font = new Font("Calibri", 12F, FontStyle.Bold | FontStyle.Italic);
-            lblB.ForeColor = SystemColors.Highlight;
-            lblB.Location = new Point(17, 157);
-            lblB.Name = "lblB";
-            lblB.Size = new Size(38, 19);
-            lblB.TabIndex = 14;
-            lblB.Text = "Blue";
-            // 
-            // lblG
-            // 
-            lblG.AutoSize = true;
-            lblG.Font = new Font("Calibri", 12F, FontStyle.Bold | FontStyle.Italic);
-            lblG.ForeColor = SystemColors.Highlight;
-            lblG.Location = new Point(9, 95);
-            lblG.Name = "lblG";
-            lblG.Size = new Size(49, 19);
-            lblG.TabIndex = 13;
-            lblG.Text = "Green";
-            // 
-            // btnManualWB
-            // 
-            btnManualWB.AutoSizeMode = AutoSizeMode.GrowAndShrink;
-            btnManualWB.BackgroundImageLayout = ImageLayout.None;
-            btnManualWB.Density = MaterialSkin.Controls.MaterialButton.MaterialButtonDensity.Default;
-            btnManualWB.Depth = 0;
-            btnManualWB.FlatStyle = FlatStyle.Flat;
-            btnManualWB.Font = new Font("Microsoft Sans Serif", 8.25F);
-            btnManualWB.HighEmphasis = true;
-            btnManualWB.Icon = null;
-            btnManualWB.Location = new Point(194, 225);
-            btnManualWB.Margin = new Padding(4, 6, 4, 6);
-            btnManualWB.MouseState = MaterialSkin.MouseState.HOVER;
-            btnManualWB.Name = "btnManualWB";
-            btnManualWB.NoAccentTextColor = Color.Empty;
-            btnManualWB.Size = new Size(82, 36);
-            btnManualWB.TabIndex = 17;
-            btnManualWB.Text = "Manual";
-            btnManualWB.Type = MaterialSkin.Controls.MaterialButton.MaterialButtonType.Contained;
-            btnManualWB.UseAccentColor = false;
-            btnManualWB.UseVisualStyleBackColor = true;
-            btnManualWB.Click += btnManualWB_Click;
+            Param_Panel.Paint += Param_Panel_Paint;
             // 
             // Gain_lbl
             // 
@@ -392,40 +279,6 @@
             Exp_lbl.Size = new Size(17, 19);
             Exp_lbl.TabIndex = 15;
             Exp_lbl.Text = "0";
-            // 
-            // btnAutoWB
-            // 
-            btnAutoWB.AutoSizeMode = AutoSizeMode.GrowAndShrink;
-            btnAutoWB.BackgroundImageLayout = ImageLayout.None;
-            btnAutoWB.Density = MaterialSkin.Controls.MaterialButton.MaterialButtonDensity.Default;
-            btnAutoWB.Depth = 0;
-            btnAutoWB.FlatStyle = FlatStyle.Flat;
-            btnAutoWB.Font = new Font("Microsoft Sans Serif", 8.25F);
-            btnAutoWB.HighEmphasis = true;
-            btnAutoWB.Icon = null;
-            btnAutoWB.Location = new Point(122, 225);
-            btnAutoWB.Margin = new Padding(4, 6, 4, 6);
-            btnAutoWB.MouseState = MaterialSkin.MouseState.HOVER;
-            btnAutoWB.Name = "btnAutoWB";
-            btnAutoWB.NoAccentTextColor = Color.Empty;
-            btnAutoWB.Size = new Size(64, 36);
-            btnAutoWB.TabIndex = 8;
-            btnAutoWB.Text = "Auto";
-            btnAutoWB.Type = MaterialSkin.Controls.MaterialButton.MaterialButtonType.Contained;
-            btnAutoWB.UseAccentColor = false;
-            btnAutoWB.UseVisualStyleBackColor = true;
-            btnAutoWB.Click += btnAutoWB_Click;
-            // 
-            // label2
-            // 
-            label2.AutoSize = true;
-            label2.Font = new Font("Calibri", 12F, FontStyle.Bold | FontStyle.Italic);
-            label2.ForeColor = SystemColors.Highlight;
-            label2.Location = new Point(9, 233);
-            label2.Name = "label2";
-            label2.Size = new Size(106, 19);
-            label2.TabIndex = 6;
-            label2.Text = "White Balance";
             // 
             // Gain
             // 
@@ -509,11 +362,6 @@
             tableLayoutPanel1.ResumeLayout(false);
             Param_Panel.ResumeLayout(false);
             Param_Panel.PerformLayout();
-            RGB_panel.ResumeLayout(false);
-            RGB_panel.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)tbBlue).EndInit();
-            ((System.ComponentModel.ISupportInitialize)tbRed).EndInit();
-            ((System.ComponentModel.ISupportInitialize)tbGreen).EndInit();
             ((System.ComponentModel.ISupportInitialize)gainTrackBar).EndInit();
             ((System.ComponentModel.ISupportInitialize)exposureTrackBar).EndInit();
             ResumeLayout(false);
@@ -540,17 +388,7 @@
         private Label Gain;
         private Label Exposure;
         private Label label1;
-        private Label label2;
-        private MaterialSkin.Controls.MaterialButton btnAutoWB;
-        private Label lblB;
-        private Label lblG;
-        private Label lblR;
-        private TrackBar tbBlue;
-        private TrackBar tbGreen;
-        private TrackBar tbRed;
         private Label Gain_lbl;
         private Label Exp_lbl;
-        private MaterialSkin.Controls.MaterialButton btnManualWB;
-        private Panel RGB_panel;
     }
 }

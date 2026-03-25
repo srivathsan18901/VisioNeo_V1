@@ -13,34 +13,14 @@
         bool isGrabbing = false;
         bool isConnected = false;
 
-
-
         public VisioNeo()
         {
             InitializeComponent();
             LoadingPB.Visible = false;
             CnctBTN.Visible = false;
             Param_Panel.Visible = false;
-            RGB_panel.Visible = false;
             devListTBox.Visible = false;
             VisualPB.SizeMode = PictureBoxSizeMode.StretchImage;
-
-
-
-            // Trackbar ranges (typical Hikvision range)
-            tbRed.Minimum = 0;
-            tbRed.Maximum = 255;
-
-            tbGreen.Minimum = 0;
-            tbGreen.Maximum = 255;
-
-            tbBlue.Minimum = 0;
-            tbBlue.Maximum = 255;
-
-            // Default values
-            tbRed.Value = 100;
-            tbGreen.Value = 100;
-            tbBlue.Value = 100;
         }
 
         private void MinimizeBTN_Click(object sender, EventArgs e)
@@ -223,31 +203,6 @@
 
                 Gain_lbl.Text = $"{currentGain:F1}";
 
-                float r = GetWhiteBalance(0);
-                float g = GetWhiteBalance(1);
-                float b = GetWhiteBalance(2);
-
-
-                // Typical range (adjust if needed)
-                tbRed.Minimum = 0;
-                tbRed.Maximum = 255;
-
-                tbGreen.Minimum = 0;
-                tbGreen.Maximum = 255;
-
-                tbBlue.Minimum = 0;
-                tbBlue.Maximum = 255;
-
-                // Clamp & assign
-                tbRed.Value = (int)Math.Min(tbRed.Maximum, r);
-                tbGreen.Value = (int)Math.Min(tbGreen.Maximum, g);
-                tbBlue.Value = (int)Math.Min(tbBlue.Maximum, b);
-
-                // Labels
-                lblR.Text = tbRed.Value.ToString();
-                lblG.Text = tbGreen.Value.ToString();
-                lblB.Text = tbBlue.Value.ToString();
-
                 isGrabbing = true;
                 grabThread = new Thread(GrabLoop);
                 grabThread.IsBackground = true;
@@ -391,16 +346,6 @@
             return val.fCurValue;
         }
 
-        private float GetWhiteBalance(int channel) // 0=R,1=G,2=B
-        {
-            camera.MV_CC_SetEnumValue_NET("BalanceRatioSelector", (uint)channel);
-
-            MyCamera.MVCC_FLOATVALUE val = new MyCamera.MVCC_FLOATVALUE();
-            camera.MV_CC_GetFloatValue_NET("BalanceRatio", ref val);
-
-            return val.fCurValue;
-        }
-
         private void Gain_Click(object sender, EventArgs e)
         {
 
@@ -422,64 +367,9 @@
             Gain_lbl.Text = $"{gain:F1}";
         }
 
-        private void SetWhiteBalance(float red, float green, float blue)
+        private void Param_Panel_Paint(object sender, PaintEventArgs e)
         {
-            camera.MV_CC_SetEnumValue_NET("BalanceWhiteAuto", 0);
 
-            camera.MV_CC_SetEnumValue_NET("BalanceRatioSelector", 0); // Red
-            camera.MV_CC_SetFloatValue_NET("BalanceRatio", red);
-
-            camera.MV_CC_SetEnumValue_NET("BalanceRatioSelector", 1); // Green
-            camera.MV_CC_SetFloatValue_NET("BalanceRatio", green);
-
-            camera.MV_CC_SetEnumValue_NET("BalanceRatioSelector", 2); // Blue
-            camera.MV_CC_SetFloatValue_NET("BalanceRatio", blue);
-        }
-
-        private void btnAutoWB_Click(object sender, EventArgs e)
-        {
-            if (!isConnected) return;
-            RGB_panel.Visible = false;
-            camera.MV_CC_SetEnumValue_NET("BalanceWhiteAuto", 1);
-        }
-
-        private void tbRed_Scroll(object sender, EventArgs e)
-        {
-            lblR.Text = tbRed.Value.ToString();
-            ApplyManualWB();
-        }
-
-        private void tbGreen_Scroll(object sender, EventArgs e)
-        {
-            lblG.Text = tbGreen.Value.ToString();
-            ApplyManualWB();
-        }
-
-        private void tbBlue_Scroll(object sender, EventArgs e)
-        {
-            lblB.Text = tbBlue.Value.ToString();
-            ApplyManualWB();
-        }
-
-        private void ApplyManualWB()
-        {
-            if (!isConnected) return;
-            SetWhiteBalance(tbRed.Value, tbGreen.Value, tbBlue.Value);
-        }
-
-        private void btnManualWB_Click(object sender, EventArgs e)
-        {
-            RGB_panel.Visible = true;
-            camera.MV_CC_SetEnumValue_NET("BalanceWhiteAuto", 0);
-
-            // Sync UI with current camera WB
-            float r = GetWhiteBalance(0);
-            float g = GetWhiteBalance(1);
-            float b = GetWhiteBalance(2);
-
-            tbRed.Value = (int)r;
-            tbGreen.Value = (int)g;
-            tbBlue.Value = (int)b;
         }
     }
 }
