@@ -58,6 +58,14 @@
             "MaterialSkin.2": {
               "target": "Package",
               "version": "[2.3.1, )"
+            },
+            "Syncfusion.Pdf.WinForms": {
+              "target": "Package",
+              "version": "[33.1.45, )"
+            },
+            "Syncfusion.Tools.Windows": {
+              "target": "Package",
+              "version": "[33.1.45, )"
             }
           },
           "imports": [

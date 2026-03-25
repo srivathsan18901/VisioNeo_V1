@@ -42,6 +42,8 @@
             LoadingPB = new PictureBox();
             searchBTN = new MaterialSkin.Controls.MaterialButton();
             tableLayoutPanel1 = new TableLayoutPanel();
+            TabCntl = new TabControl();
+            Parameters = new TabPage();
             Param_Panel = new Panel();
             cbDisplayMode = new ComboBox();
             label2 = new Label();
@@ -67,6 +69,8 @@
             label1 = new Label();
             gainTrackBar = new TrackBar();
             exposureTrackBar = new TrackBar();
+            Tools = new TabPage();
+            Imaging = new TabPage();
             panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)MaximizeBTN).BeginInit();
             ((System.ComponentModel.ISupportInitialize)CloseBTN).BeginInit();
@@ -77,6 +81,8 @@
             panel2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)LoadingPB).BeginInit();
             tableLayoutPanel1.SuspendLayout();
+            TabCntl.SuspendLayout();
+            Parameters.SuspendLayout();
             Param_Panel.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)tbFrameRate).BeginInit();
             ((System.ComponentModel.ISupportInitialize)tbSaturation).BeginInit();
@@ -257,7 +263,7 @@
             tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle());
             tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle());
             tableLayoutPanel1.Controls.Add(panel2, 0, 0);
-            tableLayoutPanel1.Controls.Add(Param_Panel, 1, 0);
+            tableLayoutPanel1.Controls.Add(TabCntl, 1, 0);
             tableLayoutPanel1.Location = new Point(2, 69);
             tableLayoutPanel1.Name = "tableLayoutPanel1";
             tableLayoutPanel1.RowCount = 1;
@@ -265,8 +271,36 @@
             tableLayoutPanel1.Size = new Size(1646, 705);
             tableLayoutPanel1.TabIndex = 3;
             // 
+            // TabCntl
+            // 
+            TabCntl.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
+            TabCntl.Controls.Add(Parameters);
+            TabCntl.Controls.Add(Tools);
+            TabCntl.Controls.Add(Imaging);
+            TabCntl.Font = new Font("Calibri", 9.75F, FontStyle.Bold | FontStyle.Italic, GraphicsUnit.Point, 0);
+            TabCntl.Location = new Point(1266, 3);
+            TabCntl.Name = "TabCntl";
+            TabCntl.Padding = new Point(12, 8);
+            TabCntl.SelectedIndex = 0;
+            TabCntl.Size = new Size(377, 699);
+            TabCntl.TabIndex = 3;
+            // 
+            // Parameters
+            // 
+            Parameters.Controls.Add(Param_Panel);
+            Parameters.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            Parameters.ForeColor = SystemColors.Highlight;
+            Parameters.Location = new Point(4, 34);
+            Parameters.Name = "Parameters";
+            Parameters.Padding = new Padding(3);
+            Parameters.Size = new Size(369, 661);
+            Parameters.TabIndex = 0;
+            Parameters.Text = "Parameters";
+            Parameters.UseVisualStyleBackColor = true;
+            // 
             // Param_Panel
             // 
+            Param_Panel.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
             Param_Panel.BackColor = Color.White;
             Param_Panel.Controls.Add(cbDisplayMode);
             Param_Panel.Controls.Add(label2);
@@ -292,10 +326,9 @@
             Param_Panel.Controls.Add(label1);
             Param_Panel.Controls.Add(gainTrackBar);
             Param_Panel.Controls.Add(exposureTrackBar);
-            Param_Panel.Dock = DockStyle.Fill;
-            Param_Panel.Location = new Point(1266, 3);
+            Param_Panel.Location = new Point(3, 3);
             Param_Panel.Name = "Param_Panel";
-            Param_Panel.Size = new Size(380, 699);
+            Param_Panel.Size = new Size(380, 691);
             Param_Panel.TabIndex = 3;
             Param_Panel.Paint += Param_Panel_Paint;
             // 
@@ -591,6 +624,29 @@
             exposureTrackBar.Value = 1;
             exposureTrackBar.Scroll += exposureTrackBar_Scroll_1;
             // 
+            // Tools
+            // 
+            Tools.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            Tools.ForeColor = SystemColors.Highlight;
+            Tools.Location = new Point(4, 34);
+            Tools.Name = "Tools";
+            Tools.Padding = new Padding(3);
+            Tools.Size = new Size(369, 661);
+            Tools.TabIndex = 1;
+            Tools.Text = "Tools";
+            Tools.UseVisualStyleBackColor = true;
+            // 
+            // Imaging
+            // 
+            Imaging.BackColor = Color.Transparent;
+            Imaging.Font = new Font("Segoe UI", 9F);
+            Imaging.ForeColor = SystemColors.Highlight;
+            Imaging.Location = new Point(4, 34);
+            Imaging.Name = "Imaging";
+            Imaging.Size = new Size(369, 661);
+            Imaging.TabIndex = 2;
+            Imaging.Text = "Imaging";
+            // 
             // VisioNeo
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
@@ -615,6 +671,8 @@
             panel2.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)LoadingPB).EndInit();
             tableLayoutPanel1.ResumeLayout(false);
+            TabCntl.ResumeLayout(false);
+            Parameters.ResumeLayout(false);
             Param_Panel.ResumeLayout(false);
             Param_Panel.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)tbFrameRate).EndInit();
@@ -667,5 +725,9 @@
         private Label label3;
         private ComboBox cbDisplayMode;
         private Label label2;
+        private TabControl TabCntl;
+        private TabPage Parameters;
+        private TabPage Tools;
+        private TabPage Imaging;
     }
 }

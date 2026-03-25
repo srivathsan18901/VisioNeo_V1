@@ -1,11 +1,27 @@
 {
   "version": 2,
-  "dgSpecHash": "1chFyro4ofo=",
+  "dgSpecHash": "dgda+HFEuis=",
   "success": true,
   "projectFilePath": "D:\\Srivathsan\\Dev\\VisioNeo\\VisioNeo_V1\\VisioNeo_App.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\Srivathsan Ganesan\\.nuget\\packages\\materialskin\\0.2.1\\materialskin.0.2.1.nupkg.sha512",
-    "C:\\Users\\Srivathsan Ganesan\\.nuget\\packages\\materialskin.2\\2.3.1\\materialskin.2.2.3.1.nupkg.sha512"
+    "C:\\Users\\Srivathsan Ganesan\\.nuget\\packages\\materialskin.2\\2.3.1\\materialskin.2.2.3.1.nupkg.sha512",
+    "C:\\Users\\Srivathsan Ganesan\\.nuget\\packages\\microsoft.winforms.designer.sdk\\1.6.0\\microsoft.winforms.designer.sdk.1.6.0.nupkg.sha512",
+    "C:\\Users\\Srivathsan Ganesan\\.nuget\\packages\\syncfusion.compression.base\\33.1.45\\syncfusion.compression.base.33.1.45.nupkg.sha512",
+    "C:\\Users\\Srivathsan Ganesan\\.nuget\\packages\\syncfusion.grid.windows\\33.1.45\\syncfusion.grid.windows.33.1.45.nupkg.sha512",
+    "C:\\Users\\Srivathsan Ganesan\\.nuget\\packages\\syncfusion.licensing\\33.1.45\\syncfusion.licensing.33.1.45.nupkg.sha512",
+    "C:\\Users\\Srivathsan Ganesan\\.nuget\\packages\\syncfusion.pdf.winforms\\33.1.45\\syncfusion.pdf.winforms.33.1.45.nupkg.sha512",
+    "C:\\Users\\Srivathsan Ganesan\\.nuget\\packages\\syncfusion.shared.base\\33.1.45\\syncfusion.shared.base.33.1.45.nupkg.sha512",
+    "C:\\Users\\Srivathsan Ganesan\\.nuget\\packages\\syncfusion.shared.windows\\33.1.45\\syncfusion.shared.windows.33.1.45.nupkg.sha512",
+    "C:\\Users\\Srivathsan Ganesan\\.nuget\\packages\\syncfusion.spellchecker.base\\33.1.45\\syncfusion.spellchecker.base.33.1.45.nupkg.sha512",
+    "C:\\Users\\Srivathsan Ganesan\\.nuget\\packages\\syncfusion.tools.base\\33.1.45\\syncfusion.tools.base.33.1.45.nupkg.sha512",
+    "C:\\Users\\Srivathsan Ganesan\\.nuget\\packages\\syncfusion.tools.windows\\33.1.45\\syncfusion.tools.windows.33.1.45.nupkg.sha512",
+    "C:\\Users\\Srivathsan Ganesan\\.nuget\\packages\\system.composition\\6.0.0\\system.composition.6.0.0.nupkg.sha512",
+    "C:\\Users\\Srivathsan Ganesan\\.nuget\\packages\\system.composition.attributedmodel\\6.0.0\\system.composition.attributedmodel.6.0.0.nupkg.sha512",
+    "C:\\Users\\Srivathsan Ganesan\\.nuget\\packages\\system.composition.convention\\6.0.0\\system.composition.convention.6.0.0.nupkg.sha512",
+    "C:\\Users\\Srivathsan Ganesan\\.nuget\\packages\\system.composition.hosting\\6.0.0\\system.composition.hosting.6.0.0.nupkg.sha512",
+    "C:\\Users\\Srivathsan Ganesan\\.nuget\\packages\\system.composition.runtime\\6.0.0\\system.composition.runtime.6.0.0.nupkg.sha512",
+    "C:\\Users\\Srivathsan Ganesan\\.nuget\\packages\\system.composition.typedparts\\6.0.0\\system.composition.typedparts.6.0.0.nupkg.sha512"
   ],
   "logs": [
     {

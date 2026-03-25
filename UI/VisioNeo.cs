@@ -19,6 +19,7 @@
             CnctBTN.Visible = false;
             Param_Panel.Visible = false;
             devListTBox.Visible = false;
+            TabCntl.Visible = false;
             VisualPB.SizeMode = PictureBoxSizeMode.StretchImage;
 
             // Brightness
@@ -258,6 +259,7 @@
 
                 isConnected = true;
                 Param_Panel.Visible = true;
+                TabCntl.Visible = true;
             }
             catch (Exception ex)
             {
