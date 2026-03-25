@@ -119,6 +119,13 @@
 
         }
 
+        private bool IsFeatureAvailable(string featureName)
+        {
+            MyCamera.MVCC_INTVALUE val = new MyCamera.MVCC_INTVALUE();
+            int res = camera.MV_CC_GetIntValue_NET(featureName, ref val);
+            return res == MyCamera.MV_OK;
+        }
+
         private void CnctBTN_Click_1(object sender, EventArgs e)
         {
             // =========================
@@ -208,6 +215,33 @@
                 camera.MV_CC_SetEnumValue_NET("TriggerMode", 0);
 
                 camera.MV_CC_StartGrabbing_NET();
+
+                // 🔥 CHECK FEATURE SUPPORT
+                bool isHikvisionRestricted =
+                    !IsFeatureAvailable("Brightness") &&
+                    !IsFeatureAvailable("Contrast") &&
+                    !IsFeatureAvailable("Sharpness") &&
+                    !IsFeatureAvailable("Saturation");
+
+                if (isHikvisionRestricted)
+                {
+                    tbBrightness.Enabled = false;
+                    tbContrast.Enabled = false;
+                    tbSharpness.Enabled = false;
+                    tbSaturation.Enabled = false;
+
+                    lblBrightness.Text = "N/A";
+                    lblContrast.Text = "N/A";
+                    lblSharpness.Text = "N/A";
+                    lblSaturation.Text = "N/A";
+                }
+                else
+                {
+                    tbBrightness.Enabled = true;
+                    tbContrast.Enabled = true;
+                    tbSharpness.Enabled = true;
+                    tbSaturation.Enabled = true;
+                }
 
                 float currentExposure = GetExposure();
 

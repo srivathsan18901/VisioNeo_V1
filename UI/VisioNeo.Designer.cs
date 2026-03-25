@@ -292,18 +292,19 @@
             Param_Panel.Controls.Add(label1);
             Param_Panel.Controls.Add(gainTrackBar);
             Param_Panel.Controls.Add(exposureTrackBar);
+            Param_Panel.Dock = DockStyle.Fill;
             Param_Panel.Location = new Point(1266, 3);
             Param_Panel.Name = "Param_Panel";
-            Param_Panel.Size = new Size(380, 696);
+            Param_Panel.Size = new Size(380, 699);
             Param_Panel.TabIndex = 3;
             Param_Panel.Paint += Param_Panel_Paint;
             // 
             // cbDisplayMode
             // 
-            cbDisplayMode.DropDownStyle = ComboBoxStyle.DropDownList;
-            cbDisplayMode.FlatStyle = FlatStyle.Flat;
+            cbDisplayMode.Anchor = AnchorStyles.Top | AnchorStyles.Right;
+            cbDisplayMode.FlatStyle = FlatStyle.Popup;
             cbDisplayMode.FormattingEnabled = true;
-            cbDisplayMode.Location = new Point(165, 53);
+            cbDisplayMode.Location = new Point(219, 53);
             cbDisplayMode.Name = "cbDisplayMode";
             cbDisplayMode.Size = new Size(121, 23);
             cbDisplayMode.TabIndex = 34;
@@ -311,6 +312,7 @@
             // 
             // label2
             // 
+            label2.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
             label2.AutoSize = true;
             label2.Font = new Font("Calibri", 12F, FontStyle.Bold | FontStyle.Italic);
             label2.ForeColor = SystemColors.Highlight;
@@ -322,6 +324,7 @@
             // 
             // label3
             // 
+            label3.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
             label3.AutoSize = true;
             label3.Font = new Font("Calibri", 12F, FontStyle.Bold | FontStyle.Italic);
             label3.ForeColor = SystemColors.Highlight;
@@ -333,6 +336,7 @@
             // 
             // lblFPS
             // 
+            lblFPS.Anchor = AnchorStyles.Top | AnchorStyles.Right;
             lblFPS.AutoSize = true;
             lblFPS.Font = new Font("Calibri", 12F, FontStyle.Bold | FontStyle.Italic);
             lblFPS.ForeColor = SystemColors.Highlight;
@@ -344,6 +348,7 @@
             // 
             // label11
             // 
+            label11.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
             label11.AutoSize = true;
             label11.Font = new Font("Calibri", 12F, FontStyle.Bold | FontStyle.Italic);
             label11.ForeColor = SystemColors.Highlight;
@@ -355,6 +360,7 @@
             // 
             // tbFrameRate
             // 
+            tbFrameRate.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
             tbFrameRate.BackColor = SystemColors.ControlLightLight;
             tbFrameRate.Location = new Point(57, 650);
             tbFrameRate.Minimum = 1;
@@ -367,6 +373,7 @@
             // 
             // lblSaturation
             // 
+            lblSaturation.Anchor = AnchorStyles.Top | AnchorStyles.Right;
             lblSaturation.AutoSize = true;
             lblSaturation.Font = new Font("Calibri", 12F, FontStyle.Bold | FontStyle.Italic);
             lblSaturation.ForeColor = SystemColors.Highlight;
@@ -378,6 +385,7 @@
             // 
             // label9
             // 
+            label9.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
             label9.AutoSize = true;
             label9.Font = new Font("Calibri", 12F, FontStyle.Bold | FontStyle.Italic);
             label9.ForeColor = SystemColors.Highlight;
@@ -389,6 +397,7 @@
             // 
             // tbSaturation
             // 
+            tbSaturation.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
             tbSaturation.BackColor = SystemColors.ControlLightLight;
             tbSaturation.Location = new Point(57, 563);
             tbSaturation.Minimum = 1;
@@ -401,6 +410,7 @@
             // 
             // lblSharpness
             // 
+            lblSharpness.Anchor = AnchorStyles.Top | AnchorStyles.Right;
             lblSharpness.AutoSize = true;
             lblSharpness.Font = new Font("Calibri", 12F, FontStyle.Bold | FontStyle.Italic);
             lblSharpness.ForeColor = SystemColors.Highlight;
@@ -412,6 +422,7 @@
             // 
             // label7
             // 
+            label7.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
             label7.AutoSize = true;
             label7.Font = new Font("Calibri", 12F, FontStyle.Bold | FontStyle.Italic);
             label7.ForeColor = SystemColors.Highlight;
@@ -423,6 +434,7 @@
             // 
             // tbSharpness
             // 
+            tbSharpness.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
             tbSharpness.BackColor = SystemColors.ControlLightLight;
             tbSharpness.Location = new Point(57, 472);
             tbSharpness.Minimum = 1;
@@ -435,6 +447,7 @@
             // 
             // lblContrast
             // 
+            lblContrast.Anchor = AnchorStyles.Top | AnchorStyles.Right;
             lblContrast.AutoSize = true;
             lblContrast.Font = new Font("Calibri", 12F, FontStyle.Bold | FontStyle.Italic);
             lblContrast.ForeColor = SystemColors.Highlight;
@@ -446,6 +459,7 @@
             // 
             // label5
             // 
+            label5.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
             label5.AutoSize = true;
             label5.Font = new Font("Calibri", 12F, FontStyle.Bold | FontStyle.Italic);
             label5.ForeColor = SystemColors.Highlight;
@@ -457,6 +471,7 @@
             // 
             // tbContrast
             // 
+            tbContrast.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
             tbContrast.BackColor = SystemColors.ControlLightLight;
             tbContrast.Location = new Point(57, 383);
             tbContrast.Minimum = 1;
@@ -469,6 +484,7 @@
             // 
             // lblBrightness
             // 
+            lblBrightness.Anchor = AnchorStyles.Top | AnchorStyles.Right;
             lblBrightness.AutoSize = true;
             lblBrightness.Font = new Font("Calibri", 12F, FontStyle.Bold | FontStyle.Italic);
             lblBrightness.ForeColor = SystemColors.Highlight;
@@ -480,6 +496,7 @@
             // 
             // tbBrightness
             // 
+            tbBrightness.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
             tbBrightness.BackColor = SystemColors.ControlLightLight;
             tbBrightness.Location = new Point(57, 296);
             tbBrightness.Minimum = 1;
@@ -492,6 +509,7 @@
             // 
             // Gain_lbl
             // 
+            Gain_lbl.Anchor = AnchorStyles.Top | AnchorStyles.Right;
             Gain_lbl.AutoSize = true;
             Gain_lbl.Font = new Font("Calibri", 12F, FontStyle.Bold | FontStyle.Italic);
             Gain_lbl.ForeColor = SystemColors.Highlight;
@@ -503,6 +521,7 @@
             // 
             // Exp_lbl
             // 
+            Exp_lbl.Anchor = AnchorStyles.Top | AnchorStyles.Right;
             Exp_lbl.AutoSize = true;
             Exp_lbl.Font = new Font("Calibri", 12F, FontStyle.Bold | FontStyle.Italic);
             Exp_lbl.ForeColor = SystemColors.Highlight;
@@ -514,6 +533,7 @@
             // 
             // Gain
             // 
+            Gain.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
             Gain.AutoSize = true;
             Gain.Font = new Font("Calibri", 12F, FontStyle.Bold | FontStyle.Italic);
             Gain.ForeColor = SystemColors.Highlight;
@@ -526,6 +546,7 @@
             // 
             // Exposure
             // 
+            Exposure.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
             Exposure.AutoSize = true;
             Exposure.Font = new Font("Calibri", 12F, FontStyle.Bold | FontStyle.Italic);
             Exposure.ForeColor = SystemColors.Highlight;
@@ -548,6 +569,7 @@
             // 
             // gainTrackBar
             // 
+            gainTrackBar.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
             gainTrackBar.BackColor = SystemColors.ControlLightLight;
             gainTrackBar.Location = new Point(51, 217);
             gainTrackBar.Name = "gainTrackBar";
@@ -558,6 +580,7 @@
             // 
             // exposureTrackBar
             // 
+            exposureTrackBar.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
             exposureTrackBar.BackColor = SystemColors.ControlLightLight;
             exposureTrackBar.Location = new Point(51, 131);
             exposureTrackBar.Minimum = 1;
