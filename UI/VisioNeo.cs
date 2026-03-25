@@ -1,25 +1,16 @@
 ﻿namespace VisioNeo_App
 {
     using MvCamCtrl.NET;
-    using System.Drawing.Imaging;
     using System.Runtime.InteropServices;
-    using System.Threading;
+    using VisioNeo_App.Services;
 
     public partial class VisioNeo : Form
     {
-        MyCamera camera = new MyCamera();
+        private CameraService cameraService = new CameraService();
+        private ImageProcessingService imageService = new ImageProcessingService();
+        private Services.DisplayMode currentDisplayMode = Services.DisplayMode.Normal;
         MyCamera.MV_CC_DEVICE_INFO_LIST deviceList;
-        Thread grabThread;
-        bool isGrabbing = false;
         bool isConnected = false;
-        enum DisplayMode
-        {
-            Normal,
-            Grayscale,
-            Heatmap
-        }
-
-        DisplayMode currentDisplayMode = DisplayMode.Normal;
 
         public VisioNeo()
         {
@@ -119,12 +110,6 @@
 
         }
 
-        private bool IsFeatureAvailable(string featureName)
-        {
-            MyCamera.MVCC_INTVALUE val = new MyCamera.MVCC_INTVALUE();
-            int res = camera.MV_CC_GetIntValue_NET(featureName, ref val);
-            return res == MyCamera.MV_OK;
-        }
 
         private void CnctBTN_Click_1(object sender, EventArgs e)
         {
@@ -136,31 +121,24 @@
                 try
                 {
                     isConnected = false;
-                    isGrabbing = false;
 
-                    grabThread?.Join(500);
+                    cameraService.Disconnect();
 
-                    camera.MV_CC_StopGrabbing_NET();
-                    camera.MV_CC_CloseDevice_NET();
-                    camera.MV_CC_DestroyDevice_NET();
-                    // Exposure default
-                    camera.MV_CC_SetEnumValue_NET("ExposureAuto", 0);
-                    camera.MV_CC_SetFloatValue_NET("ExposureTime", 10000);
-
-                    // Gain default
-                    camera.MV_CC_SetFloatValue_NET("Gain", 5);
-                    // White balance auto
-                    camera.MV_CC_SetEnumValue_NET("BalanceWhiteAuto", 1);
-                    Exp_lbl.Text = $"Exposure: {GetExposure():F0}";
-                    Gain_lbl.Text = $"Gain: {GetGain():F1}";
-
-                    // Show GIF
-                    VisualPB.Image = new Bitmap(Properties.Resources.No_Data_Founds);
-
-                    ImageAnimator.Animate(VisualPB.Image, (s, ev) =>
+                    VisualPB.Invoke(() =>
                     {
-                        VisualPB.Invalidate();
+                        VisualPB.Image?.Dispose();
+                        VisualPB.Image = null;
+
+                        Image gif = Properties.Resources.No_Data_Founds;
+
+                        VisualPB.Image = gif;
+
+                        ImageAnimator.Animate(gif, (s, ev) =>
+                        {
+                            VisualPB.Invalidate();
+                        });
                     });
+
 
                     // UI Update
                     CnctBTN.Text = "CONNECT";
@@ -192,58 +170,35 @@
             try
             {
                 MyCamera.MV_CC_DEVICE_INFO deviceInfo =
-                    (MyCamera.MV_CC_DEVICE_INFO)Marshal.PtrToStructure(
-                        deviceList.pDeviceInfo[index],
-                        typeof(MyCamera.MV_CC_DEVICE_INFO));
+                        (MyCamera.MV_CC_DEVICE_INFO)Marshal.PtrToStructure(
+                            deviceList.pDeviceInfo[index],
+                            typeof(MyCamera.MV_CC_DEVICE_INFO));
 
-                int result;
+                bool connected = cameraService.Connect(deviceInfo);
 
-                result = camera.MV_CC_CreateDevice_NET(ref deviceInfo);
-                if (result != MyCamera.MV_OK)
+
+                if (!connected)
                 {
-                    MessageBox.Show("Create handle failed");
+                    MessageBox.Show("Camera connection failed");
                     return;
                 }
 
-                result = camera.MV_CC_OpenDevice_NET();
-                if (result != MyCamera.MV_OK)
+                cameraService.StartGrabbing(frame =>
                 {
-                    MessageBox.Show("Open device failed");
-                    return;
-                }
+                    if (!cameraService.IsConnected) return;
 
-                camera.MV_CC_SetEnumValue_NET("TriggerMode", 0);
+                    Bitmap finalImage = imageService.Process(frame, currentDisplayMode);
 
-                camera.MV_CC_StartGrabbing_NET();
+                    VisualPB.Invoke(() =>
+                    {
+                        if (!cameraService.IsConnected) return;
+                        VisualPB.Image?.Dispose();
+                        VisualPB.Image = finalImage;
+                    });
+                });
 
-                // 🔥 CHECK FEATURE SUPPORT
-                bool isHikvisionRestricted =
-                    !IsFeatureAvailable("Brightness") &&
-                    !IsFeatureAvailable("Contrast") &&
-                    !IsFeatureAvailable("Sharpness") &&
-                    !IsFeatureAvailable("Saturation");
-
-                if (isHikvisionRestricted)
-                {
-                    tbBrightness.Enabled = false;
-                    tbContrast.Enabled = false;
-                    tbSharpness.Enabled = false;
-                    tbSaturation.Enabled = false;
-
-                    lblBrightness.Text = "N/A";
-                    lblContrast.Text = "N/A";
-                    lblSharpness.Text = "N/A";
-                    lblSaturation.Text = "N/A";
-                }
-                else
-                {
-                    tbBrightness.Enabled = true;
-                    tbContrast.Enabled = true;
-                    tbSharpness.Enabled = true;
-                    tbSaturation.Enabled = true;
-                }
-
-                float currentExposure = GetExposure();
+                // 🔥 LOAD PARAMETERS FROM CAMERA
+                float currentExposure = cameraService.GetExposure();
 
                 // Example range (adjust as per your camera)
                 exposureTrackBar.Minimum = 10000;
@@ -257,7 +212,7 @@
 
                 Exp_lbl.Text = $"{currentExposure:F0}";
 
-                float currentGain = GetGain();
+                float currentGain = cameraService.GetGain();
 
                 // Typical Hikvision range (adjust if needed)
                 gainTrackBar.Minimum = 0;
@@ -271,35 +226,31 @@
 
                 Gain_lbl.Text = $"{currentGain:F1}";
 
-                // Brightness
-                int brightness = GetBrightness();
+                // Optional params (may not work on Hikvision)
+                int brightness = cameraService.GetBrightness();
                 tbBrightness.Value = Math.Min(tbBrightness.Maximum, brightness);
                 lblBrightness.Text = brightness.ToString();
 
-                // Contrast
-                int contrast = GetContrast();
+                int contrast = cameraService.GetContrast();
                 tbContrast.Value = Math.Min(tbContrast.Maximum, contrast);
                 lblContrast.Text = contrast.ToString();
 
-                // Sharpness
-                int sharpness = GetSharpness();
+                int sharpness = cameraService.GetSharpness();
                 tbSharpness.Value = Math.Min(tbSharpness.Maximum, sharpness);
                 lblSharpness.Text = sharpness.ToString();
 
-                // Saturation
-                int saturation = GetSaturation();
+                int saturation = cameraService.GetSaturation();
                 tbSaturation.Value = Math.Min(tbSaturation.Maximum, saturation);
                 lblSaturation.Text = saturation.ToString();
 
-                // Frame Rate
-                float fps = GetFrameRate();
+                float fps = cameraService.GetFrameRate();
                 tbFrameRate.Value = (int)Math.Min(tbFrameRate.Maximum, fps);
                 lblFPS.Text = $"{fps:F1}";
 
-                isGrabbing = true;
-                grabThread = new Thread(GrabLoop);
-                grabThread.IsBackground = true;
-                grabThread.Start();
+                tbBrightness.Enabled = cameraService.IsFeatureAvailable("Brightness");
+                tbContrast.Enabled = cameraService.IsFeatureAvailable("Contrast");
+                tbSharpness.Enabled = cameraService.IsFeatureAvailable("Sharpness");
+                tbSaturation.Enabled = cameraService.IsFeatureAvailable("Saturation");
 
                 // UI Update
                 CnctBTN.Text = "DISCONNECT";
@@ -357,80 +308,6 @@
             return devices;
         }
 
-        private void GrabLoop()
-        {
-            MyCamera.MV_FRAME_OUT frame = new MyCamera.MV_FRAME_OUT();
-
-            while (isGrabbing)
-            {
-                int result = camera.MV_CC_GetImageBuffer_NET(ref frame, 1000);
-
-                if (result == MyCamera.MV_OK)
-                {
-                    try
-                    {
-                        MyCamera.MV_PIXEL_CONVERT_PARAM convert = new MyCamera.MV_PIXEL_CONVERT_PARAM();
-
-                        convert.nWidth = frame.stFrameInfo.nWidth;
-                        convert.nHeight = frame.stFrameInfo.nHeight;
-                        convert.pSrcData = frame.pBufAddr;
-                        convert.nSrcDataLen = frame.stFrameInfo.nFrameLen;
-                        convert.enSrcPixelType = frame.stFrameInfo.enPixelType;
-                        convert.enDstPixelType = MyCamera.MvGvspPixelType.PixelType_Gvsp_BGR8_Packed;
-                        //convert.enDstPixelType = MyCamera.MvGvspPixelType.PixelType_Gvsp_RGB8_Packed;
-
-                        int bufferSize = convert.nWidth * convert.nHeight * 3;
-                        byte[] rgbBuffer = new byte[bufferSize];
-
-                        GCHandle handle = GCHandle.Alloc(rgbBuffer, GCHandleType.Pinned);
-                        convert.pDstBuffer = handle.AddrOfPinnedObject();
-                        convert.nDstBufferSize = (uint)bufferSize;
-
-                        camera.MV_CC_ConvertPixelType_NET(ref convert);
-
-                        Bitmap bmp = new Bitmap(
-                            convert.nWidth,
-                            convert.nHeight,
-                            convert.nWidth * 3,
-                            PixelFormat.Format24bppRgb,
-                            convert.pDstBuffer
-                        );
-
-
-                        VisualPB.Invoke(new Action(() =>
-                        {
-                            if (!isConnected) return;
-
-                            Bitmap finalImage = ProcessDisplayMode(bmp);
-
-                            VisualPB.Image?.Dispose();
-                            VisualPB.Image = finalImage;
-                        }));
-
-                        handle.Free();
-                    }
-                    catch { }
-
-                    camera.MV_CC_FreeImageBuffer_NET(ref frame);
-                }
-            }
-        }
-
-        private Bitmap ProcessDisplayMode(Bitmap input)
-        {
-            switch (currentDisplayMode)
-            {
-                case DisplayMode.Grayscale:
-                    return ConvertToGrayscale(input);
-
-                case DisplayMode.Heatmap:
-                    return ConvertToHeatmap(input);
-
-                default:
-                    return (Bitmap)input.Clone();
-            }
-        }
-
         private void Gain_Click(object sender, EventArgs e)
         {
 
@@ -439,206 +316,62 @@
         private void exposureTrackBar_Scroll_1(object sender, EventArgs e)
         {
             float exposure = exposureTrackBar.Value;
-
-            SetExposure(exposure);
-
+            cameraService.SetExposure(exposure);
             Exp_lbl.Text = $"({exposure:F0} µs)";
         }
 
         private void gainTrackBar_Scroll(object sender, EventArgs e)
         {
             float gain = gainTrackBar.Value;
-            SetGain(gain);
+            cameraService.SetGain(gain);
             Gain_lbl.Text = $"{gain:F1}";
         }
 
-        private void Param_Panel_Paint(object sender, PaintEventArgs e)
-        {
-
-        }
-
-        private void SetBrightness(int value)
-        {
-            camera.MV_CC_SetIntValue_NET("Brightness", (uint)value);
-        }
-
-        private int GetBrightness()
-        {
-            MyCamera.MVCC_INTVALUE val = new MyCamera.MVCC_INTVALUE();
-            camera.MV_CC_GetIntValue_NET("Brightness", ref val);
-            return (int)val.nCurValue;
-        }
-
-        private void SetContrast(int value)
-        {
-            camera.MV_CC_SetIntValue_NET("Contrast", (uint)value);
-        }
-
-        private int GetContrast()
-        {
-            MyCamera.MVCC_INTVALUE val = new MyCamera.MVCC_INTVALUE();
-            camera.MV_CC_GetIntValue_NET("Contrast", ref val);
-            return (int)val.nCurValue;
-        }
-
-        private void SetSharpness(int value)
-        {
-            camera.MV_CC_SetIntValue_NET("Sharpness", (uint)value);
-        }
-
-        private int GetSharpness()
-        {
-            MyCamera.MVCC_INTVALUE val = new MyCamera.MVCC_INTVALUE();
-            camera.MV_CC_GetIntValue_NET("Sharpness", ref val);
-            return (int)val.nCurValue;
-        }
-
-        private void SetSaturation(int value)
-        {
-            camera.MV_CC_SetIntValue_NET("Saturation", (uint)value);
-        }
-
-        private int GetSaturation()
-        {
-            MyCamera.MVCC_INTVALUE val = new MyCamera.MVCC_INTVALUE();
-            camera.MV_CC_GetIntValue_NET("Saturation", ref val);
-            return (int)val.nCurValue;
-        }
-
-        private void SetFrameRate(float value)
-        {
-            camera.MV_CC_SetFloatValue_NET("AcquisitionFrameRate", value);
-        }
-
-        private float GetFrameRate()
-        {
-            MyCamera.MVCC_FLOATVALUE val = new MyCamera.MVCC_FLOATVALUE();
-            camera.MV_CC_GetFloatValue_NET("AcquisitionFrameRate", ref val);
-            return val.fCurValue;
-        }
-
-        private void SetExposure(float exposureValue)
-        {
-            camera.MV_CC_SetEnumValue_NET("ExposureAuto", 0); // OFF auto
-            camera.MV_CC_SetFloatValue_NET("ExposureTime", exposureValue);
-        }
-
-        private float GetExposure()
-        {
-            MyCamera.MVCC_FLOATVALUE val = new MyCamera.MVCC_FLOATVALUE();
-            camera.MV_CC_GetFloatValue_NET("ExposureTime", ref val);
-            return val.fCurValue;
-        }
-
-        private void SetGain(float gainValue)
-        {
-            camera.MV_CC_SetFloatValue_NET("Gain", gainValue);
-        }
-
-        private float GetGain()
-        {
-            MyCamera.MVCC_FLOATVALUE val = new MyCamera.MVCC_FLOATVALUE();
-            camera.MV_CC_GetFloatValue_NET("Gain", ref val);
-            return val.fCurValue;
-        }
 
         private void tbBrightness_Scroll(object sender, EventArgs e)
         {
             int val = tbBrightness.Value;
-            SetBrightness(val);
+            cameraService.SetBrightness(val);
             lblBrightness.Text = val.ToString();
         }
 
         private void tbContrast_Scroll(object sender, EventArgs e)
         {
             int val = tbContrast.Value;
-            SetContrast(val);
+            cameraService.SetContrast(val);
             lblContrast.Text = val.ToString();
         }
 
         private void tbSharpness_Scroll(object sender, EventArgs e)
         {
             int val = tbSharpness.Value;
-            SetSharpness(val);
+            cameraService.SetSharpness(val);
             lblSharpness.Text = val.ToString();
         }
 
         private void tbSaturation_Scroll(object sender, EventArgs e)
         {
             int val = tbSaturation.Value;
-            SetSaturation(val);
+            cameraService.SetSaturation(val);
             lblSaturation.Text = val.ToString();
         }
 
         private void tbFrameRate_Scroll(object sender, EventArgs e)
         {
             float val = tbFrameRate.Value;
-            SetFrameRate(val);
+            cameraService.SetFrameRate(val);
             lblFPS.Text = $"{val:F1}";
         }
+
         private void cbDisplayMode_SelectedIndexChanged(object sender, EventArgs e)
         {
-            currentDisplayMode = (DisplayMode)cbDisplayMode.SelectedIndex;
+            currentDisplayMode = (Services.DisplayMode)cbDisplayMode.SelectedIndex;
         }
 
-        private Bitmap ConvertToGrayscale(Bitmap original)
+
+        private void Param_Panel_Paint(object sender, PaintEventArgs e)
         {
-            Bitmap gray = new Bitmap(original.Width, original.Height);
 
-            using (Graphics g = Graphics.FromImage(gray))
-            {
-                ColorMatrix colorMatrix = new ColorMatrix(new float[][]
-                {
-            new float[] {0.3f, 0.3f, 0.3f, 0, 0},
-            new float[] {0.59f,0.59f,0.59f,0,0},
-            new float[] {0.11f,0.11f,0.11f,0,0},
-            new float[] {0,0,0,1,0},
-            new float[] {0,0,0,0,1}
-                });
-
-                ImageAttributes attributes = new ImageAttributes();
-                attributes.SetColorMatrix(colorMatrix);
-
-                g.DrawImage(original,
-                    new Rectangle(0, 0, original.Width, original.Height),
-                    0, 0, original.Width, original.Height,
-                    GraphicsUnit.Pixel, attributes);
-            }
-
-            return gray;
-        }
-
-        private Bitmap ConvertToHeatmap(Bitmap original)
-        {
-            Bitmap heatmap = new Bitmap(original.Width, original.Height);
-
-            for (int y = 0; y < original.Height; y++)
-            {
-                for (int x = 0; x < original.Width; x++)
-                {
-                    Color pixel = original.GetPixel(x, y);
-
-                    int intensity = (pixel.R + pixel.G + pixel.B) / 3;
-
-                    Color heatColor = GetHeatColor(intensity);
-
-                    heatmap.SetPixel(x, y, heatColor);
-                }
-            }
-
-            return heatmap;
-        }
-
-        private Color GetHeatColor(int value)
-        {
-            if (value < 85)
-                return Color.FromArgb(0, value * 3, 255); // Blue → Cyan
-
-            else if (value < 170)
-                return Color.FromArgb((value - 85) * 3, 255, 255 - (value - 85) * 3); // Green → Yellow
-
-            else
-                return Color.FromArgb(255, 255 - (value - 170) * 3, 0); // Yellow → Red
         }
     }
 }
