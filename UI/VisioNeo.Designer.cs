@@ -287,6 +287,8 @@
             // 
             // Parameters
             // 
+            Parameters.BackgroundImage = (Image)resources.GetObject("Parameters.BackgroundImage");
+            Parameters.BackgroundImageLayout = ImageLayout.Stretch;
             Parameters.Controls.Add(Param_Panel);
             Parameters.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
             Parameters.ForeColor = SystemColors.Highlight;
@@ -626,6 +628,8 @@
             // 
             // Tools
             // 
+            Tools.BackgroundImage = (Image)resources.GetObject("Tools.BackgroundImage");
+            Tools.BackgroundImageLayout = ImageLayout.Stretch;
             Tools.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
             Tools.ForeColor = SystemColors.Highlight;
             Tools.Location = new Point(4, 34);
@@ -639,6 +643,8 @@
             // Imaging
             // 
             Imaging.BackColor = Color.Transparent;
+            Imaging.BackgroundImage = (Image)resources.GetObject("Imaging.BackgroundImage");
+            Imaging.BackgroundImageLayout = ImageLayout.Stretch;
             Imaging.Font = new Font("Segoe UI", 9F);
             Imaging.ForeColor = SystemColors.Highlight;
             Imaging.Location = new Point(4, 34);

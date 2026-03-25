@@ -62,3 +62,17 @@ D:\Srivathsan\Dev\VisioNeo\VisioNeo_V1\obj\Debug\net10.0-windows\refint\VisioNeo
 D:\Srivathsan\Dev\VisioNeo\VisioNeo_V1\obj\Debug\net10.0-windows\VisioNeo_App.pdb
 D:\Srivathsan\Dev\VisioNeo\VisioNeo_V1\obj\Debug\net10.0-windows\VisioNeo_App.genruntimeconfig.cache
 D:\Srivathsan\Dev\VisioNeo\VisioNeo_V1\obj\Debug\net10.0-windows\ref\VisioNeo_App.dll
+D:\Srivathsan\Dev\VisioNeo\VisioNeo_V1\bin\Debug\net10.0-windows\Syncfusion.Compression.Base.dll
+D:\Srivathsan\Dev\VisioNeo\VisioNeo_V1\bin\Debug\net10.0-windows\Syncfusion.Grid.Windows.dll
+D:\Srivathsan\Dev\VisioNeo\VisioNeo_V1\bin\Debug\net10.0-windows\Syncfusion.Licensing.dll
+D:\Srivathsan\Dev\VisioNeo\VisioNeo_V1\bin\Debug\net10.0-windows\Syncfusion.Pdf.Base.dll
+D:\Srivathsan\Dev\VisioNeo\VisioNeo_V1\bin\Debug\net10.0-windows\Syncfusion.Shared.Base.dll
+D:\Srivathsan\Dev\VisioNeo\VisioNeo_V1\bin\Debug\net10.0-windows\Syncfusion.Shared.Windows.dll
+D:\Srivathsan\Dev\VisioNeo\VisioNeo_V1\bin\Debug\net10.0-windows\Syncfusion.SpellChecker.Base.dll
+D:\Srivathsan\Dev\VisioNeo\VisioNeo_V1\bin\Debug\net10.0-windows\Syncfusion.Tools.Base.dll
+D:\Srivathsan\Dev\VisioNeo\VisioNeo_V1\bin\Debug\net10.0-windows\Syncfusion.Tools.Windows.dll
+D:\Srivathsan\Dev\VisioNeo\VisioNeo_V1\bin\Debug\net10.0-windows\System.Composition.AttributedModel.dll
+D:\Srivathsan\Dev\VisioNeo\VisioNeo_V1\bin\Debug\net10.0-windows\System.Composition.Convention.dll
+D:\Srivathsan\Dev\VisioNeo\VisioNeo_V1\bin\Debug\net10.0-windows\System.Composition.Hosting.dll
+D:\Srivathsan\Dev\VisioNeo\VisioNeo_V1\bin\Debug\net10.0-windows\System.Composition.Runtime.dll
+D:\Srivathsan\Dev\VisioNeo\VisioNeo_V1\bin\Debug\net10.0-windows\System.Composition.TypedParts.dll
