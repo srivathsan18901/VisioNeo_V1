@@ -70,7 +70,11 @@
             gainTrackBar = new TrackBar();
             exposureTrackBar = new TrackBar();
             Tools = new TabPage();
+            ToolsPanel = new Panel();
+            OCR_btn = new Button();
+            OCV_btn = new Button();
             Imaging = new TabPage();
+            label4 = new Label();
             panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)MaximizeBTN).BeginInit();
             ((System.ComponentModel.ISupportInitialize)CloseBTN).BeginInit();
@@ -91,6 +95,8 @@
             ((System.ComponentModel.ISupportInitialize)tbBrightness).BeginInit();
             ((System.ComponentModel.ISupportInitialize)gainTrackBar).BeginInit();
             ((System.ComponentModel.ISupportInitialize)exposureTrackBar).BeginInit();
+            Tools.SuspendLayout();
+            ToolsPanel.SuspendLayout();
             SuspendLayout();
             // 
             // panel1
@@ -277,12 +283,14 @@
             TabCntl.Controls.Add(Parameters);
             TabCntl.Controls.Add(Tools);
             TabCntl.Controls.Add(Imaging);
+            TabCntl.DrawMode = TabDrawMode.OwnerDrawFixed;
             TabCntl.Font = new Font("Calibri", 9.75F, FontStyle.Bold | FontStyle.Italic, GraphicsUnit.Point, 0);
             TabCntl.Location = new Point(1266, 3);
             TabCntl.Name = "TabCntl";
             TabCntl.Padding = new Point(12, 8);
             TabCntl.SelectedIndex = 0;
             TabCntl.Size = new Size(377, 699);
+            TabCntl.SizeMode = TabSizeMode.Fixed;
             TabCntl.TabIndex = 3;
             // 
             // Parameters
@@ -330,7 +338,7 @@
             Param_Panel.Controls.Add(exposureTrackBar);
             Param_Panel.Location = new Point(3, 3);
             Param_Panel.Name = "Param_Panel";
-            Param_Panel.Size = new Size(380, 691);
+            Param_Panel.Size = new Size(363, 655);
             Param_Panel.TabIndex = 3;
             Param_Panel.Paint += Param_Panel_Paint;
             // 
@@ -339,7 +347,7 @@
             cbDisplayMode.Anchor = AnchorStyles.Top | AnchorStyles.Right;
             cbDisplayMode.FlatStyle = FlatStyle.Popup;
             cbDisplayMode.FormattingEnabled = true;
-            cbDisplayMode.Location = new Point(219, 53);
+            cbDisplayMode.Location = new Point(205, 53);
             cbDisplayMode.Name = "cbDisplayMode";
             cbDisplayMode.Size = new Size(121, 23);
             cbDisplayMode.TabIndex = 34;
@@ -351,7 +359,7 @@
             label2.AutoSize = true;
             label2.Font = new Font("Calibri", 12F, FontStyle.Bold | FontStyle.Italic);
             label2.ForeColor = SystemColors.Highlight;
-            label2.Location = new Point(57, 53);
+            label2.Location = new Point(39, 53);
             label2.Name = "label2";
             label2.Size = new Size(99, 19);
             label2.TabIndex = 33;
@@ -363,7 +371,7 @@
             label3.AutoSize = true;
             label3.Font = new Font("Calibri", 12F, FontStyle.Bold | FontStyle.Italic);
             label3.ForeColor = SystemColors.Highlight;
-            label3.Location = new Point(53, 265);
+            label3.Location = new Point(35, 265);
             label3.Name = "label3";
             label3.Size = new Size(78, 19);
             label3.TabIndex = 32;
@@ -375,7 +383,7 @@
             lblFPS.AutoSize = true;
             lblFPS.Font = new Font("Calibri", 12F, FontStyle.Bold | FontStyle.Italic);
             lblFPS.ForeColor = SystemColors.Highlight;
-            lblFPS.Location = new Point(269, 619);
+            lblFPS.Location = new Point(309, 619);
             lblFPS.Name = "lblFPS";
             lblFPS.Size = new Size(17, 19);
             lblFPS.TabIndex = 31;
@@ -387,7 +395,7 @@
             label11.AutoSize = true;
             label11.Font = new Font("Calibri", 12F, FontStyle.Bold | FontStyle.Italic);
             label11.ForeColor = SystemColors.Highlight;
-            label11.Location = new Point(55, 619);
+            label11.Location = new Point(37, 619);
             label11.Name = "label11";
             label11.Size = new Size(86, 19);
             label11.TabIndex = 30;
@@ -397,10 +405,10 @@
             // 
             tbFrameRate.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
             tbFrameRate.BackColor = SystemColors.ControlLightLight;
-            tbFrameRate.Location = new Point(57, 650);
+            tbFrameRate.Location = new Point(39, 650);
             tbFrameRate.Minimum = 1;
             tbFrameRate.Name = "tbFrameRate";
-            tbFrameRate.Size = new Size(289, 45);
+            tbFrameRate.Size = new Size(293, 45);
             tbFrameRate.SmallChange = 5;
             tbFrameRate.TabIndex = 29;
             tbFrameRate.Value = 1;
@@ -412,7 +420,7 @@
             lblSaturation.AutoSize = true;
             lblSaturation.Font = new Font("Calibri", 12F, FontStyle.Bold | FontStyle.Italic);
             lblSaturation.ForeColor = SystemColors.Highlight;
-            lblSaturation.Location = new Point(269, 532);
+            lblSaturation.Location = new Point(309, 532);
             lblSaturation.Name = "lblSaturation";
             lblSaturation.Size = new Size(17, 19);
             lblSaturation.TabIndex = 28;
@@ -424,7 +432,7 @@
             label9.AutoSize = true;
             label9.Font = new Font("Calibri", 12F, FontStyle.Bold | FontStyle.Italic);
             label9.ForeColor = SystemColors.Highlight;
-            label9.Location = new Point(57, 532);
+            label9.Location = new Point(39, 532);
             label9.Name = "label9";
             label9.Size = new Size(77, 19);
             label9.TabIndex = 27;
@@ -434,10 +442,10 @@
             // 
             tbSaturation.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
             tbSaturation.BackColor = SystemColors.ControlLightLight;
-            tbSaturation.Location = new Point(57, 563);
+            tbSaturation.Location = new Point(39, 563);
             tbSaturation.Minimum = 1;
             tbSaturation.Name = "tbSaturation";
-            tbSaturation.Size = new Size(289, 45);
+            tbSaturation.Size = new Size(293, 45);
             tbSaturation.SmallChange = 5;
             tbSaturation.TabIndex = 26;
             tbSaturation.Value = 1;
@@ -449,7 +457,7 @@
             lblSharpness.AutoSize = true;
             lblSharpness.Font = new Font("Calibri", 12F, FontStyle.Bold | FontStyle.Italic);
             lblSharpness.ForeColor = SystemColors.Highlight;
-            lblSharpness.Location = new Point(269, 441);
+            lblSharpness.Location = new Point(309, 441);
             lblSharpness.Name = "lblSharpness";
             lblSharpness.Size = new Size(17, 19);
             lblSharpness.TabIndex = 25;
@@ -461,7 +469,7 @@
             label7.AutoSize = true;
             label7.Font = new Font("Calibri", 12F, FontStyle.Bold | FontStyle.Italic);
             label7.ForeColor = SystemColors.Highlight;
-            label7.Location = new Point(57, 441);
+            label7.Location = new Point(39, 441);
             label7.Name = "label7";
             label7.Size = new Size(74, 19);
             label7.TabIndex = 24;
@@ -471,10 +479,10 @@
             // 
             tbSharpness.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
             tbSharpness.BackColor = SystemColors.ControlLightLight;
-            tbSharpness.Location = new Point(57, 472);
+            tbSharpness.Location = new Point(39, 472);
             tbSharpness.Minimum = 1;
             tbSharpness.Name = "tbSharpness";
-            tbSharpness.Size = new Size(289, 45);
+            tbSharpness.Size = new Size(293, 45);
             tbSharpness.SmallChange = 5;
             tbSharpness.TabIndex = 23;
             tbSharpness.Value = 1;
@@ -486,7 +494,7 @@
             lblContrast.AutoSize = true;
             lblContrast.Font = new Font("Calibri", 12F, FontStyle.Bold | FontStyle.Italic);
             lblContrast.ForeColor = SystemColors.Highlight;
-            lblContrast.Location = new Point(269, 352);
+            lblContrast.Location = new Point(309, 352);
             lblContrast.Name = "lblContrast";
             lblContrast.Size = new Size(17, 19);
             lblContrast.TabIndex = 22;
@@ -498,7 +506,7 @@
             label5.AutoSize = true;
             label5.Font = new Font("Calibri", 12F, FontStyle.Bold | FontStyle.Italic);
             label5.ForeColor = SystemColors.Highlight;
-            label5.Location = new Point(55, 352);
+            label5.Location = new Point(37, 352);
             label5.Name = "label5";
             label5.Size = new Size(65, 19);
             label5.TabIndex = 21;
@@ -508,10 +516,10 @@
             // 
             tbContrast.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
             tbContrast.BackColor = SystemColors.ControlLightLight;
-            tbContrast.Location = new Point(57, 383);
+            tbContrast.Location = new Point(39, 383);
             tbContrast.Minimum = 1;
             tbContrast.Name = "tbContrast";
-            tbContrast.Size = new Size(289, 45);
+            tbContrast.Size = new Size(293, 45);
             tbContrast.SmallChange = 5;
             tbContrast.TabIndex = 20;
             tbContrast.Value = 1;
@@ -523,7 +531,7 @@
             lblBrightness.AutoSize = true;
             lblBrightness.Font = new Font("Calibri", 12F, FontStyle.Bold | FontStyle.Italic);
             lblBrightness.ForeColor = SystemColors.Highlight;
-            lblBrightness.Location = new Point(269, 265);
+            lblBrightness.Location = new Point(309, 265);
             lblBrightness.Name = "lblBrightness";
             lblBrightness.Size = new Size(17, 19);
             lblBrightness.TabIndex = 19;
@@ -533,10 +541,10 @@
             // 
             tbBrightness.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
             tbBrightness.BackColor = SystemColors.ControlLightLight;
-            tbBrightness.Location = new Point(57, 296);
+            tbBrightness.Location = new Point(39, 296);
             tbBrightness.Minimum = 1;
             tbBrightness.Name = "tbBrightness";
-            tbBrightness.Size = new Size(289, 45);
+            tbBrightness.Size = new Size(293, 45);
             tbBrightness.SmallChange = 5;
             tbBrightness.TabIndex = 17;
             tbBrightness.Value = 1;
@@ -548,7 +556,7 @@
             Gain_lbl.AutoSize = true;
             Gain_lbl.Font = new Font("Calibri", 12F, FontStyle.Bold | FontStyle.Italic);
             Gain_lbl.ForeColor = SystemColors.Highlight;
-            Gain_lbl.Location = new Point(269, 179);
+            Gain_lbl.Location = new Point(309, 179);
             Gain_lbl.Name = "Gain_lbl";
             Gain_lbl.Size = new Size(17, 19);
             Gain_lbl.TabIndex = 16;
@@ -560,7 +568,7 @@
             Exp_lbl.AutoSize = true;
             Exp_lbl.Font = new Font("Calibri", 12F, FontStyle.Bold | FontStyle.Italic);
             Exp_lbl.ForeColor = SystemColors.Highlight;
-            Exp_lbl.Location = new Point(269, 100);
+            Exp_lbl.Location = new Point(309, 100);
             Exp_lbl.Name = "Exp_lbl";
             Exp_lbl.Size = new Size(17, 19);
             Exp_lbl.TabIndex = 15;
@@ -572,7 +580,7 @@
             Gain.AutoSize = true;
             Gain.Font = new Font("Calibri", 12F, FontStyle.Bold | FontStyle.Italic);
             Gain.ForeColor = SystemColors.Highlight;
-            Gain.Location = new Point(57, 179);
+            Gain.Location = new Point(39, 179);
             Gain.Name = "Gain";
             Gain.Size = new Size(39, 19);
             Gain.TabIndex = 4;
@@ -585,7 +593,7 @@
             Exposure.AutoSize = true;
             Exposure.Font = new Font("Calibri", 12F, FontStyle.Bold | FontStyle.Italic);
             Exposure.ForeColor = SystemColors.Highlight;
-            Exposure.Location = new Point(57, 100);
+            Exposure.Location = new Point(39, 100);
             Exposure.Name = "Exposure";
             Exposure.Size = new Size(68, 19);
             Exposure.TabIndex = 3;
@@ -606,9 +614,9 @@
             // 
             gainTrackBar.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
             gainTrackBar.BackColor = SystemColors.ControlLightLight;
-            gainTrackBar.Location = new Point(51, 217);
+            gainTrackBar.Location = new Point(33, 217);
             gainTrackBar.Name = "gainTrackBar";
-            gainTrackBar.Size = new Size(289, 45);
+            gainTrackBar.Size = new Size(293, 45);
             gainTrackBar.SmallChange = 10;
             gainTrackBar.TabIndex = 1;
             gainTrackBar.Scroll += gainTrackBar_Scroll;
@@ -617,10 +625,10 @@
             // 
             exposureTrackBar.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
             exposureTrackBar.BackColor = SystemColors.ControlLightLight;
-            exposureTrackBar.Location = new Point(51, 131);
+            exposureTrackBar.Location = new Point(33, 131);
             exposureTrackBar.Minimum = 1;
             exposureTrackBar.Name = "exposureTrackBar";
-            exposureTrackBar.Size = new Size(289, 45);
+            exposureTrackBar.Size = new Size(293, 45);
             exposureTrackBar.SmallChange = 5;
             exposureTrackBar.TabIndex = 0;
             exposureTrackBar.Value = 1;
@@ -630,6 +638,7 @@
             // 
             Tools.BackgroundImage = (Image)resources.GetObject("Tools.BackgroundImage");
             Tools.BackgroundImageLayout = ImageLayout.Stretch;
+            Tools.Controls.Add(ToolsPanel);
             Tools.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
             Tools.ForeColor = SystemColors.Highlight;
             Tools.Location = new Point(4, 34);
@@ -639,6 +648,45 @@
             Tools.TabIndex = 1;
             Tools.Text = "Tools";
             Tools.UseVisualStyleBackColor = true;
+            // 
+            // ToolsPanel
+            // 
+            ToolsPanel.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
+            ToolsPanel.AutoScroll = true;
+            ToolsPanel.BackColor = Color.White;
+            ToolsPanel.Controls.Add(label4);
+            ToolsPanel.Controls.Add(OCR_btn);
+            ToolsPanel.Controls.Add(OCV_btn);
+            ToolsPanel.Location = new Point(3, 3);
+            ToolsPanel.Name = "ToolsPanel";
+            ToolsPanel.Size = new Size(363, 655);
+            ToolsPanel.TabIndex = 0;
+            // 
+            // OCR_btn
+            // 
+            OCR_btn.BackgroundImageLayout = ImageLayout.None;
+            OCR_btn.FlatStyle = FlatStyle.Flat;
+            OCR_btn.Font = new Font("Segoe UI", 9.75F, FontStyle.Bold | FontStyle.Italic, GraphicsUnit.Point, 0);
+            OCR_btn.Location = new Point(39, 116);
+            OCR_btn.Name = "OCR_btn";
+            OCR_btn.Size = new Size(149, 50);
+            OCR_btn.TabIndex = 1;
+            OCR_btn.Text = "Optical Character Recognization ";
+            OCR_btn.TextAlign = ContentAlignment.MiddleLeft;
+            OCR_btn.UseVisualStyleBackColor = true;
+            // 
+            // OCV_btn
+            // 
+            OCV_btn.BackgroundImageLayout = ImageLayout.None;
+            OCV_btn.FlatStyle = FlatStyle.Flat;
+            OCV_btn.Font = new Font("Segoe UI", 9.75F, FontStyle.Bold | FontStyle.Italic);
+            OCV_btn.Location = new Point(39, 47);
+            OCV_btn.Name = "OCV_btn";
+            OCV_btn.Size = new Size(149, 50);
+            OCV_btn.TabIndex = 0;
+            OCV_btn.Text = "Optical Character Verification";
+            OCV_btn.TextAlign = ContentAlignment.MiddleLeft;
+            OCV_btn.UseVisualStyleBackColor = true;
             // 
             // Imaging
             // 
@@ -652,6 +700,17 @@
             Imaging.Size = new Size(369, 661);
             Imaging.TabIndex = 2;
             Imaging.Text = "Imaging";
+            // 
+            // label4
+            // 
+            label4.AutoSize = true;
+            label4.Font = new Font("Segoe UI", 12F, FontStyle.Bold | FontStyle.Italic, GraphicsUnit.Point, 0);
+            label4.ForeColor = SystemColors.Highlight;
+            label4.Location = new Point(6, 9);
+            label4.Name = "label4";
+            label4.Size = new Size(60, 21);
+            label4.TabIndex = 3;
+            label4.Text = "TOOLS";
             // 
             // VisioNeo
             // 
@@ -688,6 +747,9 @@
             ((System.ComponentModel.ISupportInitialize)tbBrightness).EndInit();
             ((System.ComponentModel.ISupportInitialize)gainTrackBar).EndInit();
             ((System.ComponentModel.ISupportInitialize)exposureTrackBar).EndInit();
+            Tools.ResumeLayout(false);
+            ToolsPanel.ResumeLayout(false);
+            ToolsPanel.PerformLayout();
             ResumeLayout(false);
         }
 
@@ -735,5 +797,9 @@
         private TabPage Parameters;
         private TabPage Tools;
         private TabPage Imaging;
+        private Panel ToolsPanel;
+        private Button OCR_btn;
+        private Button OCV_btn;
+        private Label label4;
     }
 }

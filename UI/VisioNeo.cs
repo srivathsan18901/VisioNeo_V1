@@ -15,9 +15,11 @@
         public VisioNeo()
         {
             InitializeComponent();
+            TabCntl.SizeMode = TabSizeMode.Fixed;
             LoadingPB.Visible = false;
             CnctBTN.Visible = false;
             Param_Panel.Visible = false;
+            ToolsPanel.Visible = false;
             devListTBox.Visible = false;
             //TabCntl.Visible = false;
             VisualPB.SizeMode = PictureBoxSizeMode.StretchImage;
@@ -47,6 +49,46 @@
             cbDisplayMode.Items.Add("Heatmap");
 
             cbDisplayMode.SelectedIndex = 0;
+            this.TabCntl.DrawItem += new DrawItemEventHandler(this.tabControl1_DrawItem);
+        }
+
+
+        private void tabControl1_DrawItem(object sender, DrawItemEventArgs e)
+        {
+            Graphics g = e.Graphics;
+            g.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
+
+
+
+            TabPage tabPage = TabCntl.TabPages[e.Index];
+            Rectangle tabRect = TabCntl.GetTabRect(e.Index);
+
+            bool isSelected = (e.Index == TabCntl.SelectedIndex);
+
+            // Colors
+            Color bgColor = isSelected ? Color.FromArgb(66, 109, 178) : Color.FromArgb(114, 162, 182);
+            Color textColor = Color.White;
+
+            // Fill tab
+            using (SolidBrush brush = new SolidBrush(bgColor))
+            {
+                g.FillRectangle(brush, tabRect);
+            }
+
+            // Text
+            using (Font font = new Font("Segoe UI",
+                                       isSelected ? 10.5f : 9.5f,
+                                       isSelected ? FontStyle.Bold : FontStyle.Italic))
+            using (SolidBrush textBrush = new SolidBrush(textColor))
+            {
+                StringFormat sf = new StringFormat
+                {
+                    Alignment = StringAlignment.Center,
+                    LineAlignment = StringAlignment.Center
+                };
+
+                g.DrawString(tabPage.Text, font, textBrush, tabRect, sf);
+            }
         }
 
         private void MinimizeBTN_Click(object sender, EventArgs e)
@@ -147,6 +189,7 @@
 
                     isConnected = false;
                     Param_Panel.Visible = false;
+                    ToolsPanel.Visible = false;
                 }
                 catch (Exception ex)
                 {
@@ -259,6 +302,7 @@
 
                 isConnected = true;
                 Param_Panel.Visible = true;
+                ToolsPanel.Visible = true;
                 TabCntl.Visible = true;
             }
             catch (Exception ex)

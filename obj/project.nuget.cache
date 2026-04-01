@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "dgda+HFEuis=",
+  "dgSpecHash": "AFlcYOPzn7Y=",
   "success": true,
   "projectFilePath": "D:\\Srivathsan\\Dev\\VisioNeo\\VisioNeo_V1\\VisioNeo_App.csproj",
   "expectedPackageFiles": [
@@ -21,7 +21,8 @@
     "C:\\Users\\Srivathsan Ganesan\\.nuget\\packages\\system.composition.convention\\6.0.0\\system.composition.convention.6.0.0.nupkg.sha512",
     "C:\\Users\\Srivathsan Ganesan\\.nuget\\packages\\system.composition.hosting\\6.0.0\\system.composition.hosting.6.0.0.nupkg.sha512",
     "C:\\Users\\Srivathsan Ganesan\\.nuget\\packages\\system.composition.runtime\\6.0.0\\system.composition.runtime.6.0.0.nupkg.sha512",
-    "C:\\Users\\Srivathsan Ganesan\\.nuget\\packages\\system.composition.typedparts\\6.0.0\\system.composition.typedparts.6.0.0.nupkg.sha512"
+    "C:\\Users\\Srivathsan Ganesan\\.nuget\\packages\\system.composition.typedparts\\6.0.0\\system.composition.typedparts.6.0.0.nupkg.sha512",
+    "C:\\Users\\Srivathsan Ganesan\\.nuget\\packages\\tesseract\\5.2.0\\tesseract.5.2.0.nupkg.sha512"
   ],
   "logs": [
     {

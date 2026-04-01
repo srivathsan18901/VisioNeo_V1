@@ -66,6 +66,10 @@
             "Syncfusion.Tools.Windows": {
               "target": "Package",
               "version": "[33.1.45, )"
+            },
+            "Tesseract": {
+              "target": "Package",
+              "version": "[5.2.0, )"
             }
           },
           "imports": [
