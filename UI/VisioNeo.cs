@@ -11,6 +11,10 @@
         private Services.DisplayMode currentDisplayMode = Services.DisplayMode.Normal;
         MyCamera.MV_CC_DEVICE_INFO_LIST deviceList;
         bool isConnected = false;
+        private OCRService ocrService = new OCRService();
+        private string lastDetectedText = "";
+        private Bitmap lastFrame = null;
+        private bool isFrozen = false;
 
         public VisioNeo()
         {
@@ -51,7 +55,6 @@
             cbDisplayMode.SelectedIndex = 0;
             this.TabCntl.DrawItem += new DrawItemEventHandler(this.tabControl1_DrawItem);
         }
-
 
         private void tabControl1_DrawItem(object sender, DrawItemEventArgs e)
         {
@@ -153,7 +156,6 @@
 
         }
 
-
         private void CnctBTN_Click_1(object sender, EventArgs e)
         {
             // =========================
@@ -188,6 +190,7 @@
                     CnctBTN.ForeColor = Color.SeaGreen;
 
                     isConnected = false;
+                    isFrozen = false;
                     Param_Panel.Visible = false;
                     ToolsPanel.Visible = false;
                 }
@@ -229,13 +232,15 @@
 
                 cameraService.StartGrabbing(frame =>
                 {
-                    if (!cameraService.IsConnected) return;
+                    if (isFrozen) return; // 🔥 STOP updating when frozen
 
                     Bitmap finalImage = imageService.Process(frame, currentDisplayMode);
 
+                    lastFrame?.Dispose();
+                    lastFrame = (Bitmap)finalImage.Clone(); // 🔥 store clean copy
+
                     VisualPB.Invoke(() =>
                     {
-                        if (!cameraService.IsConnected) return;
                         VisualPB.Image?.Dispose();
                         VisualPB.Image = finalImage;
                     });
@@ -373,7 +378,6 @@
             Gain_lbl.Text = $"{gain:F1}";
         }
 
-
         private void tbBrightness_Scroll(object sender, EventArgs e)
         {
             int val = tbBrightness.Value;
@@ -414,10 +418,45 @@
             currentDisplayMode = (Services.DisplayMode)cbDisplayMode.SelectedIndex;
         }
 
-
         private void Param_Panel_Paint(object sender, PaintEventArgs e)
         {
 
+        }
+
+        private void OCV_btn_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private async void OCR_btn_Click(object sender, EventArgs e)
+        {
+            if (lastFrame == null)
+            {
+                MessageBox.Show("No frame available!");
+                return;
+            }
+
+            isFrozen = true;
+
+            Bitmap captured = (Bitmap)lastFrame.Clone();
+
+            // 🔥 FIX: Deskew before OCR
+            Bitmap deskewed = imageService.DeskewImage(captured);
+
+            VisualPB.Image?.Dispose();
+            VisualPB.Image = (Bitmap)deskewed.Clone();
+
+            string text = await Task.Run(() => ocrService.ReadText(deskewed));
+
+            txtOCRResult.Text = text;
+
+            deskewed.Dispose();
+            captured.Dispose();
+        }
+
+        private void Resume_btn_Click(object sender, EventArgs e)
+        {
+            isFrozen = false;
         }
     }
 }

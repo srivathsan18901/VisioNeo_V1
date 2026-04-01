@@ -1,4 +1,6 @@
-﻿using System.Drawing.Imaging;
+﻿using OpenCvSharp;
+using OpenCvSharp.Extensions;
+using System.Drawing.Imaging;
 
 namespace VisioNeo_App.Services
 {
@@ -19,6 +21,48 @@ namespace VisioNeo_App.Services
                 DisplayMode.Heatmap => ConvertToHeatmap(input),
                 _ => (Bitmap)input.Clone()
             };
+        }
+
+        public Bitmap DeskewImage(Bitmap input)
+        {
+            using (Mat src = BitmapConverter.ToMat(input))
+            using (Mat gray = new Mat())
+            using (Mat binary = new Mat())
+            using (Mat nonZero = new Mat())
+            {
+                // Convert to grayscale
+                Cv2.CvtColor(src, gray, ColorConversionCodes.BGR2GRAY);
+
+                // Threshold
+                Cv2.Threshold(gray, binary, 0, 255,
+                    ThresholdTypes.BinaryInv | ThresholdTypes.Otsu);
+
+                // Find non-zero pixels
+                Cv2.FindNonZero(binary, nonZero);
+
+                if (nonZero.Empty())
+                    return input;
+
+                // 🔥 Directly use Mat (NO conversion to Point[])
+                RotatedRect box = Cv2.MinAreaRect(nonZero);
+
+                double angle = box.Angle;
+
+                if (angle < -45)
+                    angle += 90;
+
+                // Rotate image
+                Point2f center = new Point2f(src.Width / 2f, src.Height / 2f);
+                Mat rotationMatrix = Cv2.GetRotationMatrix2D(center, angle, 1.0);
+
+                Mat rotated = new Mat();
+                Cv2.WarpAffine(src, rotated, rotationMatrix, src.Size(),
+                    InterpolationFlags.Linear,
+                    BorderTypes.Constant,
+                    Scalar.White);
+
+                return BitmapConverter.ToBitmap(rotated);
+            }
         }
 
         // =========================

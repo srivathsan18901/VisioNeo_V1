@@ -59,6 +59,18 @@
               "target": "Package",
               "version": "[2.3.1, )"
             },
+            "OpenCvSharp4": {
+              "target": "Package",
+              "version": "[4.13.0.20260330, )"
+            },
+            "OpenCvSharp4.Extensions": {
+              "target": "Package",
+              "version": "[4.13.0.20260330, )"
+            },
+            "OpenCvSharp4.runtime.win": {
+              "target": "Package",
+              "version": "[4.13.0.20260302, )"
+            },
             "Syncfusion.Pdf.WinForms": {
               "target": "Package",
               "version": "[33.1.45, )"
@@ -68,6 +80,10 @@
               "version": "[33.1.45, )"
             },
             "Tesseract": {
+              "target": "Package",
+              "version": "[5.2.0, )"
+            },
+            "Tesseract.Drawing": {
               "target": "Package",
               "version": "[5.2.0, )"
             }

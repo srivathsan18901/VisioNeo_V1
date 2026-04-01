@@ -71,10 +71,12 @@
             exposureTrackBar = new TrackBar();
             Tools = new TabPage();
             ToolsPanel = new Panel();
+            Resume_btn = new PictureBox();
+            txtOCRResult = new RichTextBox();
+            label4 = new Label();
             OCR_btn = new Button();
             OCV_btn = new Button();
             Imaging = new TabPage();
-            label4 = new Label();
             panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)MaximizeBTN).BeginInit();
             ((System.ComponentModel.ISupportInitialize)CloseBTN).BeginInit();
@@ -97,6 +99,7 @@
             ((System.ComponentModel.ISupportInitialize)exposureTrackBar).BeginInit();
             Tools.SuspendLayout();
             ToolsPanel.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)Resume_btn).BeginInit();
             SuspendLayout();
             // 
             // panel1
@@ -654,6 +657,8 @@
             ToolsPanel.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
             ToolsPanel.AutoScroll = true;
             ToolsPanel.BackColor = Color.White;
+            ToolsPanel.Controls.Add(Resume_btn);
+            ToolsPanel.Controls.Add(txtOCRResult);
             ToolsPanel.Controls.Add(label4);
             ToolsPanel.Controls.Add(OCR_btn);
             ToolsPanel.Controls.Add(OCV_btn);
@@ -662,18 +667,51 @@
             ToolsPanel.Size = new Size(363, 655);
             ToolsPanel.TabIndex = 0;
             // 
+            // Resume_btn
+            // 
+            Resume_btn.Anchor = AnchorStyles.Top | AnchorStyles.Right;
+            Resume_btn.BackColor = Color.Transparent;
+            Resume_btn.Image = (Image)resources.GetObject("Resume_btn.Image");
+            Resume_btn.Location = new Point(321, 157);
+            Resume_btn.Name = "Resume_btn";
+            Resume_btn.Size = new Size(25, 25);
+            Resume_btn.SizeMode = PictureBoxSizeMode.StretchImage;
+            Resume_btn.TabIndex = 7;
+            Resume_btn.TabStop = false;
+            Resume_btn.Click += Resume_btn_Click;
+            // 
+            // txtOCRResult
+            // 
+            txtOCRResult.Location = new Point(14, 188);
+            txtOCRResult.Name = "txtOCRResult";
+            txtOCRResult.Size = new Size(332, 355);
+            txtOCRResult.TabIndex = 4;
+            txtOCRResult.Text = "";
+            // 
+            // label4
+            // 
+            label4.AutoSize = true;
+            label4.Font = new Font("Segoe UI", 12F, FontStyle.Bold | FontStyle.Italic, GraphicsUnit.Point, 0);
+            label4.ForeColor = SystemColors.Highlight;
+            label4.Location = new Point(6, 9);
+            label4.Name = "label4";
+            label4.Size = new Size(60, 21);
+            label4.TabIndex = 3;
+            label4.Text = "TOOLS";
+            // 
             // OCR_btn
             // 
             OCR_btn.BackgroundImageLayout = ImageLayout.None;
             OCR_btn.FlatStyle = FlatStyle.Flat;
             OCR_btn.Font = new Font("Segoe UI", 9.75F, FontStyle.Bold | FontStyle.Italic, GraphicsUnit.Point, 0);
-            OCR_btn.Location = new Point(39, 116);
+            OCR_btn.Location = new Point(14, 132);
             OCR_btn.Name = "OCR_btn";
             OCR_btn.Size = new Size(149, 50);
             OCR_btn.TabIndex = 1;
             OCR_btn.Text = "Optical Character Recognization ";
             OCR_btn.TextAlign = ContentAlignment.MiddleLeft;
             OCR_btn.UseVisualStyleBackColor = true;
+            OCR_btn.Click += OCR_btn_Click;
             // 
             // OCV_btn
             // 
@@ -687,6 +725,7 @@
             OCV_btn.Text = "Optical Character Verification";
             OCV_btn.TextAlign = ContentAlignment.MiddleLeft;
             OCV_btn.UseVisualStyleBackColor = true;
+            OCV_btn.Click += OCV_btn_Click;
             // 
             // Imaging
             // 
@@ -700,17 +739,6 @@
             Imaging.Size = new Size(369, 661);
             Imaging.TabIndex = 2;
             Imaging.Text = "Imaging";
-            // 
-            // label4
-            // 
-            label4.AutoSize = true;
-            label4.Font = new Font("Segoe UI", 12F, FontStyle.Bold | FontStyle.Italic, GraphicsUnit.Point, 0);
-            label4.ForeColor = SystemColors.Highlight;
-            label4.Location = new Point(6, 9);
-            label4.Name = "label4";
-            label4.Size = new Size(60, 21);
-            label4.TabIndex = 3;
-            label4.Text = "TOOLS";
             // 
             // VisioNeo
             // 
@@ -750,6 +778,7 @@
             Tools.ResumeLayout(false);
             ToolsPanel.ResumeLayout(false);
             ToolsPanel.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)Resume_btn).EndInit();
             ResumeLayout(false);
         }
 
@@ -801,5 +830,7 @@
         private Button OCR_btn;
         private Button OCV_btn;
         private Label label4;
+        private RichTextBox txtOCRResult;
+        private PictureBox Resume_btn;
     }
 }

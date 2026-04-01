@@ -15,6 +15,7 @@
   </ItemGroup>
   <ImportGroup Condition=" '$(ExcludeRestorePackageImports)' != 'true' ">
     <Import Project="$(NuGetPackageRoot)microsoft.winforms.designer.sdk\1.6.0\build\netcoreapp3.1\Microsoft.WinForms.Designer.SDK.props" Condition="Exists('$(NuGetPackageRoot)microsoft.winforms.designer.sdk\1.6.0\build\netcoreapp3.1\Microsoft.WinForms.Designer.SDK.props')" />
+    <Import Project="$(NuGetPackageRoot)opencvsharp4.runtime.win\4.13.0.20260302\build\net8.0\OpenCvSharp4.runtime.win.props" Condition="Exists('$(NuGetPackageRoot)opencvsharp4.runtime.win\4.13.0.20260302\build\net8.0\OpenCvSharp4.runtime.win.props')" />
   </ImportGroup>
   <PropertyGroup Condition=" '$(ExcludeRestorePackageImports)' != 'true' ">
     <PkgSyncfusion_Shared_Base Condition=" '$(PkgSyncfusion_Shared_Base)' == '' ">C:\Users\Srivathsan Ganesan\.nuget\packages\syncfusion.shared.base\33.1.45</PkgSyncfusion_Shared_Base>

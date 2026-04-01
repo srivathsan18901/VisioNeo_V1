@@ -1,12 +1,15 @@
 {
   "version": 2,
-  "dgSpecHash": "AFlcYOPzn7Y=",
+  "dgSpecHash": "HY6h18JYn7k=",
   "success": true,
   "projectFilePath": "D:\\Srivathsan\\Dev\\VisioNeo\\VisioNeo_V1\\VisioNeo_App.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\Srivathsan Ganesan\\.nuget\\packages\\materialskin\\0.2.1\\materialskin.0.2.1.nupkg.sha512",
     "C:\\Users\\Srivathsan Ganesan\\.nuget\\packages\\materialskin.2\\2.3.1\\materialskin.2.2.3.1.nupkg.sha512",
     "C:\\Users\\Srivathsan Ganesan\\.nuget\\packages\\microsoft.winforms.designer.sdk\\1.6.0\\microsoft.winforms.designer.sdk.1.6.0.nupkg.sha512",
+    "C:\\Users\\Srivathsan Ganesan\\.nuget\\packages\\opencvsharp4\\4.13.0.20260330\\opencvsharp4.4.13.0.20260330.nupkg.sha512",
+    "C:\\Users\\Srivathsan Ganesan\\.nuget\\packages\\opencvsharp4.extensions\\4.13.0.20260330\\opencvsharp4.extensions.4.13.0.20260330.nupkg.sha512",
+    "C:\\Users\\Srivathsan Ganesan\\.nuget\\packages\\opencvsharp4.runtime.win\\4.13.0.20260302\\opencvsharp4.runtime.win.4.13.0.20260302.nupkg.sha512",
     "C:\\Users\\Srivathsan Ganesan\\.nuget\\packages\\syncfusion.compression.base\\33.1.45\\syncfusion.compression.base.33.1.45.nupkg.sha512",
     "C:\\Users\\Srivathsan Ganesan\\.nuget\\packages\\syncfusion.grid.windows\\33.1.45\\syncfusion.grid.windows.33.1.45.nupkg.sha512",
     "C:\\Users\\Srivathsan Ganesan\\.nuget\\packages\\syncfusion.licensing\\33.1.45\\syncfusion.licensing.33.1.45.nupkg.sha512",
@@ -22,7 +25,8 @@
     "C:\\Users\\Srivathsan Ganesan\\.nuget\\packages\\system.composition.hosting\\6.0.0\\system.composition.hosting.6.0.0.nupkg.sha512",
     "C:\\Users\\Srivathsan Ganesan\\.nuget\\packages\\system.composition.runtime\\6.0.0\\system.composition.runtime.6.0.0.nupkg.sha512",
     "C:\\Users\\Srivathsan Ganesan\\.nuget\\packages\\system.composition.typedparts\\6.0.0\\system.composition.typedparts.6.0.0.nupkg.sha512",
-    "C:\\Users\\Srivathsan Ganesan\\.nuget\\packages\\tesseract\\5.2.0\\tesseract.5.2.0.nupkg.sha512"
+    "C:\\Users\\Srivathsan Ganesan\\.nuget\\packages\\tesseract\\5.2.0\\tesseract.5.2.0.nupkg.sha512",
+    "C:\\Users\\Srivathsan Ganesan\\.nuget\\packages\\tesseract.drawing\\5.2.0\\tesseract.drawing.5.2.0.nupkg.sha512"
   ],
   "logs": [
     {

@@ -44,6 +44,51 @@
           "build/netcoreapp3.1/Microsoft.WinForms.Designer.SDK.targets": {}
         }
       },
+      "OpenCvSharp4/4.13.0.20260330": {
+        "type": "package",
+        "compile": {
+          "lib/net8.0/OpenCvSharp.dll": {
+            "related": ".xml"
+          }
+        },
+        "runtime": {
+          "lib/net8.0/OpenCvSharp.dll": {
+            "related": ".xml"
+          }
+        }
+      },
+      "OpenCvSharp4.Extensions/4.13.0.20260330": {
+        "type": "package",
+        "dependencies": {
+          "OpenCvSharp4": "4.13.0.20260330"
+        },
+        "compile": {
+          "lib/net8.0/OpenCvSharp.Extensions.dll": {
+            "related": ".xml"
+          }
+        },
+        "runtime": {
+          "lib/net8.0/OpenCvSharp.Extensions.dll": {
+            "related": ".xml"
+          }
+        }
+      },
+      "OpenCvSharp4.runtime.win/4.13.0.20260302": {
+        "type": "package",
+        "build": {
+          "build/net8.0/OpenCvSharp4.runtime.win.props": {}
+        },
+        "runtimeTargets": {
+          "runtimes/win-x64/native/OpenCvSharpExtern.dll": {
+            "assetType": "native",
+            "rid": "win-x64"
+          },
+          "runtimes/win-x64/native/opencv_videoio_ffmpeg4130_64.dll": {
+            "assetType": "native",
+            "rid": "win-x64"
+          }
+        }
+      },
       "Syncfusion.Compression.Base/33.1.45": {
         "type": "package",
         "compile": {
@@ -310,6 +355,18 @@
         "build": {
           "build/Tesseract.targets": {}
         }
+      },
+      "Tesseract.Drawing/5.2.0": {
+        "type": "package",
+        "dependencies": {
+          "Tesseract": "5.2.0"
+        },
+        "compile": {
+          "lib/netstandard2.0/Tesseract.Drawing.dll": {}
+        },
+        "runtime": {
+          "lib/netstandard2.0/Tesseract.Drawing.dll": {}
+        }
       }
     }
   },
@@ -369,6 +426,62 @@
         "ref/netcoreapp3.1/Microsoft.DotNet.DesignTools.Server.xml",
         "ref/netcoreapp3.1/Microsoft.WinForms.Utilities.Shared.dll",
         "ref/netcoreapp3.1/Microsoft.WinForms.Utilities.Shared.xml"
+      ]
+    },
+    "OpenCvSharp4/4.13.0.20260330": {
+      "sha512": "fCoLdwfQfiBKpaDJNE8R48mXlwaMauvbHdX0q12Zs8+HnKQvUu6Ep0zQTSSVXv2hEvOGPZMJKepOXuWJDoLaTA==",
+      "type": "package",
+      "path": "opencvsharp4/4.13.0.20260330",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "README.managed.md",
+        "lib/net8.0/OpenCvSharp.dll",
+        "lib/net8.0/OpenCvSharp.xml",
+        "lib/netstandard2.0/OpenCvSharp.dll",
+        "lib/netstandard2.0/OpenCvSharp.xml",
+        "lib/netstandard2.1/OpenCvSharp.dll",
+        "lib/netstandard2.1/OpenCvSharp.xml",
+        "opencvsharp.png",
+        "opencvsharp4.4.13.0.20260330.nupkg.sha512",
+        "opencvsharp4.nuspec"
+      ]
+    },
+    "OpenCvSharp4.Extensions/4.13.0.20260330": {
+      "sha512": "t838BwiL+FNmAq9CFYG6hbbcviicrURqWFXhIC3YSv1EGzXjl21N3BfCHtmjixBMvST++JFjoruVseTBgkjzGQ==",
+      "type": "package",
+      "path": "opencvsharp4.extensions/4.13.0.20260330",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "README.managed.md",
+        "lib/net8.0/OpenCvSharp.Extensions.dll",
+        "lib/net8.0/OpenCvSharp.Extensions.xml",
+        "lib/netstandard2.0/OpenCvSharp.Extensions.dll",
+        "lib/netstandard2.0/OpenCvSharp.Extensions.xml",
+        "lib/netstandard2.1/OpenCvSharp.Extensions.dll",
+        "lib/netstandard2.1/OpenCvSharp.Extensions.xml",
+        "opencvsharp.png",
+        "opencvsharp4.extensions.4.13.0.20260330.nupkg.sha512",
+        "opencvsharp4.extensions.nuspec"
+      ]
+    },
+    "OpenCvSharp4.runtime.win/4.13.0.20260302": {
+      "sha512": "VC2n9CVZQvAm+p0NXW077e/MGkDBraT3ye4FdInRPpxTVK64DwGnLuIncS8mwrkVcKhqh82/KgcDgKXNWDndAA==",
+      "type": "package",
+      "path": "opencvsharp4.runtime.win/4.13.0.20260302",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "README.runtime.md",
+        "build/net8.0/OpenCvSharp4.runtime.win.props",
+        "build/netcoreapp/OpenCvSharp4.runtime.win.props",
+        "build/netstandard/OpenCvSharp4.runtime.win.props",
+        "opencvsharp.png",
+        "opencvsharp4.runtime.win.4.13.0.20260302.nupkg.sha512",
+        "opencvsharp4.runtime.win.nuspec",
+        "runtimes/win-x64/native/OpenCvSharpExtern.dll",
+        "runtimes/win-x64/native/opencv_videoio_ffmpeg4130_64.dll"
       ]
     },
     "Syncfusion.Compression.Base/33.1.45": {
@@ -756,15 +869,31 @@
         "x86/leptonica-1.82.0.dll",
         "x86/tesseract50.dll"
       ]
+    },
+    "Tesseract.Drawing/5.2.0": {
+      "sha512": "ORuub0AagnAGPjdhO8qNxI6Z+2dXUmqWFy6qSjQ+Wr56SxQiV2jNvGM9Tpluvd7F5vwJeqXEWQnzFvGL6iHfjA==",
+      "type": "package",
+      "path": "tesseract.drawing/5.2.0",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "lib/netstandard2.0/Tesseract.Drawing.dll",
+        "tesseract.drawing.5.2.0.nupkg.sha512",
+        "tesseract.drawing.nuspec"
+      ]
     }
   },
   "projectFileDependencyGroups": {
     "net10.0-windows7.0": [
       "MaterialSkin >= 0.2.1",
       "MaterialSkin.2 >= 2.3.1",
+      "OpenCvSharp4 >= 4.13.0.20260330",
+      "OpenCvSharp4.Extensions >= 4.13.0.20260330",
+      "OpenCvSharp4.runtime.win >= 4.13.0.20260302",
       "Syncfusion.Pdf.WinForms >= 33.1.45",
       "Syncfusion.Tools.Windows >= 33.1.45",
-      "Tesseract >= 5.2.0"
+      "Tesseract >= 5.2.0",
+      "Tesseract.Drawing >= 5.2.0"
     ]
   },
   "packageFolders": {
@@ -826,6 +955,18 @@
             "target": "Package",
             "version": "[2.3.1, )"
           },
+          "OpenCvSharp4": {
+            "target": "Package",
+            "version": "[4.13.0.20260330, )"
+          },
+          "OpenCvSharp4.Extensions": {
+            "target": "Package",
+            "version": "[4.13.0.20260330, )"
+          },
+          "OpenCvSharp4.runtime.win": {
+            "target": "Package",
+            "version": "[4.13.0.20260302, )"
+          },
           "Syncfusion.Pdf.WinForms": {
             "target": "Package",
             "version": "[33.1.45, )"
@@ -835,6 +976,10 @@
             "version": "[33.1.45, )"
           },
           "Tesseract": {
+            "target": "Package",
+            "version": "[5.2.0, )"
+          },
+          "Tesseract.Drawing": {
             "target": "Package",
             "version": "[5.2.0, )"
           }
