@@ -28,6 +28,7 @@
             Param_Panel.Visible = false;
             ToolsPanel.Visible = false;
             devListTBox.Visible = false;
+            OCR_Panel.Visible = false;
             //TabCntl.Visible = false;
             VisualPB.SizeMode = PictureBoxSizeMode.StretchImage;
 
@@ -498,6 +499,7 @@
                 VisualPB.Image = (Bitmap)deskewed.Clone();
 
                 string text = await Task.Run(() => ocrService.ReadText(deskewed));
+                OCR_Panel.Visible = true;
 
                 // This runs on UI thread after await, so it's safe
                 txtOCRResult.Text = text;
@@ -515,6 +517,7 @@
         private void Resume_btn_Click(object sender, EventArgs e)
         {
             isFrozen = false;
+            OCR_Panel.Visible = false;
         }
 
         private void HandleException(Exception ex, string context = "")

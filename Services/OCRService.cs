@@ -6,6 +6,7 @@ namespace VisioNeo_App.Services
     {
         private TesseractEngine engine;
         private bool disposed = false;
+        public bool IsInitialized => engine != null;
 
         public OCRService()
         {
@@ -22,10 +23,18 @@ namespace VisioNeo_App.Services
 
                 engine = new TesseractEngine(tessPath, "eng", EngineMode.Default);
 
-                // Optional: Configure engine for better performance
+                // REMOVE strict whitelist OR expand it
                 engine.SetVariable("tessedit_char_whitelist",
-                    "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789");
-                engine.SetVariable("tessedit_ocr_engine_mode", EngineMode.Default.ToString());
+                    "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789.,:;!?@#$₹%&()[]{}+-=*/\\\"' ");
+
+                // VERY IMPORTANT for spacing
+                engine.SetVariable("preserve_interword_spaces", "1");
+                engine.SetVariable("tessedit_pageseg_mode", "3"); // Fully automatic
+                engine.SetVariable("textord_space_size_is_variable", "1");
+                // Better segmentation (try both)
+                engine.DefaultPageSegMode = PageSegMode.Auto;
+                // OR if single block text:
+                //engine.DefaultPageSegMode = PageSegMode.SingleBlock;
             }
             catch (Exception ex)
             {

@@ -71,7 +71,9 @@
             exposureTrackBar = new TrackBar();
             Tools = new TabPage();
             ToolsPanel = new Panel();
+            OCR_Panel = new Panel();
             Resume_btn = new PictureBox();
+            label6 = new Label();
             txtOCRResult = new RichTextBox();
             label4 = new Label();
             OCR_btn = new Button();
@@ -99,6 +101,7 @@
             ((System.ComponentModel.ISupportInitialize)exposureTrackBar).BeginInit();
             Tools.SuspendLayout();
             ToolsPanel.SuspendLayout();
+            OCR_Panel.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)Resume_btn).BeginInit();
             SuspendLayout();
             // 
@@ -351,7 +354,7 @@
             cbDisplayMode.Anchor = AnchorStyles.Top | AnchorStyles.Right;
             cbDisplayMode.FlatStyle = FlatStyle.Popup;
             cbDisplayMode.FormattingEnabled = true;
-            cbDisplayMode.Location = new Point(188, 53);
+            cbDisplayMode.Location = new Point(154, 53);
             cbDisplayMode.Name = "cbDisplayMode";
             cbDisplayMode.Size = new Size(121, 23);
             cbDisplayMode.TabIndex = 34;
@@ -387,7 +390,7 @@
             lblFPS.AutoSize = true;
             lblFPS.Font = new Font("Calibri", 12F, FontStyle.Bold | FontStyle.Italic);
             lblFPS.ForeColor = SystemColors.Highlight;
-            lblFPS.Location = new Point(292, 619);
+            lblFPS.Location = new Point(258, 619);
             lblFPS.Name = "lblFPS";
             lblFPS.Size = new Size(17, 19);
             lblFPS.TabIndex = 31;
@@ -412,7 +415,7 @@
             tbFrameRate.Location = new Point(39, 650);
             tbFrameRate.Minimum = 1;
             tbFrameRate.Name = "tbFrameRate";
-            tbFrameRate.Size = new Size(276, 45);
+            tbFrameRate.Size = new Size(242, 45);
             tbFrameRate.SmallChange = 5;
             tbFrameRate.TabIndex = 29;
             tbFrameRate.Value = 1;
@@ -424,7 +427,7 @@
             lblSaturation.AutoSize = true;
             lblSaturation.Font = new Font("Calibri", 12F, FontStyle.Bold | FontStyle.Italic);
             lblSaturation.ForeColor = SystemColors.Highlight;
-            lblSaturation.Location = new Point(292, 532);
+            lblSaturation.Location = new Point(258, 532);
             lblSaturation.Name = "lblSaturation";
             lblSaturation.Size = new Size(17, 19);
             lblSaturation.TabIndex = 28;
@@ -449,7 +452,7 @@
             tbSaturation.Location = new Point(39, 563);
             tbSaturation.Minimum = 1;
             tbSaturation.Name = "tbSaturation";
-            tbSaturation.Size = new Size(276, 45);
+            tbSaturation.Size = new Size(242, 45);
             tbSaturation.SmallChange = 5;
             tbSaturation.TabIndex = 26;
             tbSaturation.Value = 1;
@@ -461,7 +464,7 @@
             lblSharpness.AutoSize = true;
             lblSharpness.Font = new Font("Calibri", 12F, FontStyle.Bold | FontStyle.Italic);
             lblSharpness.ForeColor = SystemColors.Highlight;
-            lblSharpness.Location = new Point(292, 441);
+            lblSharpness.Location = new Point(258, 441);
             lblSharpness.Name = "lblSharpness";
             lblSharpness.Size = new Size(17, 19);
             lblSharpness.TabIndex = 25;
@@ -486,7 +489,7 @@
             tbSharpness.Location = new Point(39, 472);
             tbSharpness.Minimum = 1;
             tbSharpness.Name = "tbSharpness";
-            tbSharpness.Size = new Size(276, 45);
+            tbSharpness.Size = new Size(242, 45);
             tbSharpness.SmallChange = 5;
             tbSharpness.TabIndex = 23;
             tbSharpness.Value = 1;
@@ -498,7 +501,7 @@
             lblContrast.AutoSize = true;
             lblContrast.Font = new Font("Calibri", 12F, FontStyle.Bold | FontStyle.Italic);
             lblContrast.ForeColor = SystemColors.Highlight;
-            lblContrast.Location = new Point(292, 352);
+            lblContrast.Location = new Point(258, 352);
             lblContrast.Name = "lblContrast";
             lblContrast.Size = new Size(17, 19);
             lblContrast.TabIndex = 22;
@@ -523,7 +526,7 @@
             tbContrast.Location = new Point(39, 383);
             tbContrast.Minimum = 1;
             tbContrast.Name = "tbContrast";
-            tbContrast.Size = new Size(276, 45);
+            tbContrast.Size = new Size(242, 45);
             tbContrast.SmallChange = 5;
             tbContrast.TabIndex = 20;
             tbContrast.Value = 1;
@@ -535,7 +538,7 @@
             lblBrightness.AutoSize = true;
             lblBrightness.Font = new Font("Calibri", 12F, FontStyle.Bold | FontStyle.Italic);
             lblBrightness.ForeColor = SystemColors.Highlight;
-            lblBrightness.Location = new Point(292, 265);
+            lblBrightness.Location = new Point(258, 265);
             lblBrightness.Name = "lblBrightness";
             lblBrightness.Size = new Size(17, 19);
             lblBrightness.TabIndex = 19;
@@ -548,7 +551,7 @@
             tbBrightness.Location = new Point(39, 296);
             tbBrightness.Minimum = 1;
             tbBrightness.Name = "tbBrightness";
-            tbBrightness.Size = new Size(276, 45);
+            tbBrightness.Size = new Size(242, 45);
             tbBrightness.SmallChange = 5;
             tbBrightness.TabIndex = 17;
             tbBrightness.Value = 1;
@@ -560,7 +563,7 @@
             Gain_lbl.AutoSize = true;
             Gain_lbl.Font = new Font("Calibri", 12F, FontStyle.Bold | FontStyle.Italic);
             Gain_lbl.ForeColor = SystemColors.Highlight;
-            Gain_lbl.Location = new Point(292, 179);
+            Gain_lbl.Location = new Point(258, 179);
             Gain_lbl.Name = "Gain_lbl";
             Gain_lbl.Size = new Size(17, 19);
             Gain_lbl.TabIndex = 16;
@@ -572,7 +575,7 @@
             Exp_lbl.AutoSize = true;
             Exp_lbl.Font = new Font("Calibri", 12F, FontStyle.Bold | FontStyle.Italic);
             Exp_lbl.ForeColor = SystemColors.Highlight;
-            Exp_lbl.Location = new Point(292, 100);
+            Exp_lbl.Location = new Point(258, 100);
             Exp_lbl.Name = "Exp_lbl";
             Exp_lbl.Size = new Size(17, 19);
             Exp_lbl.TabIndex = 15;
@@ -620,7 +623,7 @@
             gainTrackBar.BackColor = SystemColors.ControlLightLight;
             gainTrackBar.Location = new Point(33, 217);
             gainTrackBar.Name = "gainTrackBar";
-            gainTrackBar.Size = new Size(276, 45);
+            gainTrackBar.Size = new Size(242, 45);
             gainTrackBar.SmallChange = 10;
             gainTrackBar.TabIndex = 1;
             gainTrackBar.Scroll += gainTrackBar_Scroll;
@@ -632,7 +635,7 @@
             exposureTrackBar.Location = new Point(33, 131);
             exposureTrackBar.Minimum = 1;
             exposureTrackBar.Name = "exposureTrackBar";
-            exposureTrackBar.Size = new Size(276, 45);
+            exposureTrackBar.Size = new Size(242, 45);
             exposureTrackBar.SmallChange = 5;
             exposureTrackBar.TabIndex = 0;
             exposureTrackBar.Value = 1;
@@ -658,8 +661,7 @@
             ToolsPanel.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
             ToolsPanel.AutoScroll = true;
             ToolsPanel.BackColor = Color.White;
-            ToolsPanel.Controls.Add(Resume_btn);
-            ToolsPanel.Controls.Add(txtOCRResult);
+            ToolsPanel.Controls.Add(OCR_Panel);
             ToolsPanel.Controls.Add(label4);
             ToolsPanel.Controls.Add(OCR_btn);
             ToolsPanel.Controls.Add(OCV_btn);
@@ -668,12 +670,25 @@
             ToolsPanel.Size = new Size(363, 655);
             ToolsPanel.TabIndex = 0;
             // 
+            // OCR_Panel
+            // 
+            OCR_Panel.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
+            OCR_Panel.BackgroundImage = (Image)resources.GetObject("OCR_Panel.BackgroundImage");
+            OCR_Panel.BackgroundImageLayout = ImageLayout.Stretch;
+            OCR_Panel.Controls.Add(Resume_btn);
+            OCR_Panel.Controls.Add(label6);
+            OCR_Panel.Controls.Add(txtOCRResult);
+            OCR_Panel.Location = new Point(7, 240);
+            OCR_Panel.Name = "OCR_Panel";
+            OCR_Panel.Size = new Size(339, 405);
+            OCR_Panel.TabIndex = 9;
+            // 
             // Resume_btn
             // 
             Resume_btn.Anchor = AnchorStyles.Top | AnchorStyles.Right;
             Resume_btn.BackColor = Color.Transparent;
             Resume_btn.Image = (Image)resources.GetObject("Resume_btn.Image");
-            Resume_btn.Location = new Point(321, 157);
+            Resume_btn.Location = new Point(311, 3);
             Resume_btn.Name = "Resume_btn";
             Resume_btn.Size = new Size(25, 25);
             Resume_btn.SizeMode = PictureBoxSizeMode.StretchImage;
@@ -681,13 +696,24 @@
             Resume_btn.TabStop = false;
             Resume_btn.Click += Resume_btn_Click;
             // 
+            // label6
+            // 
+            label6.AutoSize = true;
+            label6.BackColor = Color.Transparent;
+            label6.Font = new Font("Segoe UI", 9.75F, FontStyle.Bold | FontStyle.Italic);
+            label6.Location = new Point(5, 11);
+            label6.Name = "label6";
+            label6.Size = new Size(79, 17);
+            label6.TabIndex = 8;
+            label6.Text = "OCR PANEL";
+            // 
             // txtOCRResult
             // 
             txtOCRResult.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
             txtOCRResult.BorderStyle = BorderStyle.None;
-            txtOCRResult.Location = new Point(14, 188);
+            txtOCRResult.Location = new Point(4, 42);
             txtOCRResult.Name = "txtOCRResult";
-            txtOCRResult.Size = new Size(332, 355);
+            txtOCRResult.Size = new Size(329, 355);
             txtOCRResult.TabIndex = 4;
             txtOCRResult.Text = "";
             // 
@@ -707,7 +733,7 @@
             OCR_btn.BackgroundImageLayout = ImageLayout.None;
             OCR_btn.FlatStyle = FlatStyle.Flat;
             OCR_btn.Font = new Font("Segoe UI", 9.75F, FontStyle.Bold | FontStyle.Italic, GraphicsUnit.Point, 0);
-            OCR_btn.Location = new Point(14, 132);
+            OCR_btn.Location = new Point(197, 51);
             OCR_btn.Name = "OCR_btn";
             OCR_btn.Size = new Size(149, 50);
             OCR_btn.TabIndex = 1;
@@ -721,7 +747,7 @@
             OCV_btn.BackgroundImageLayout = ImageLayout.None;
             OCV_btn.FlatStyle = FlatStyle.Flat;
             OCV_btn.Font = new Font("Segoe UI", 9.75F, FontStyle.Bold | FontStyle.Italic);
-            OCV_btn.Location = new Point(39, 47);
+            OCV_btn.Location = new Point(18, 51);
             OCV_btn.Name = "OCV_btn";
             OCV_btn.Size = new Size(149, 50);
             OCV_btn.TabIndex = 0;
@@ -781,6 +807,8 @@
             Tools.ResumeLayout(false);
             ToolsPanel.ResumeLayout(false);
             ToolsPanel.PerformLayout();
+            OCR_Panel.ResumeLayout(false);
+            OCR_Panel.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)Resume_btn).EndInit();
             ResumeLayout(false);
         }
@@ -835,5 +863,7 @@
         private Label label4;
         private RichTextBox txtOCRResult;
         private PictureBox Resume_btn;
+        private Panel OCR_Panel;
+        private Label label6;
     }
 }
