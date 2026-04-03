@@ -101,7 +101,7 @@ namespace VisioNeo_App.Services
                 {
                     var color = GetConfidenceColor(item.confidence);
 
-                    using (Pen pen = new Pen(color, 2))
+                    using (Pen pen = new Pen(color, 5))
                     using (Brush brush = new SolidBrush(color))
                     using (Font font = new Font("Segoe UI", 10, FontStyle.Bold))
                     {
