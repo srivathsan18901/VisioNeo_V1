@@ -42,40 +42,150 @@ namespace VisioNeo_App.Services
             }
         }
 
-        public string ReadText(Bitmap image)
+        public List<(string word, float confidence, Rect bounds)> ReadWordsWithConfidence(Bitmap image)
         {
             if (image == null)
-                throw new ArgumentNullException(nameof(image), "Image cannot be null");
+                throw new ArgumentNullException(nameof(image));
 
             if (engine == null)
                 throw new InvalidOperationException("OCR engine is not initialized");
 
-            try
+            var results = new List<(string, float, Rect)>();
+
+            using (var pix = PixConverter.ToPix(image))
+            using (var page = engine.Process(pix))
+            using (var iter = page.GetIterator())
             {
-                using (var pix = PixConverter.ToPix(image))
+                iter.Begin();
+
+                do
                 {
-                    if (pix == null)
-                        throw new InvalidOperationException("Failed to convert image to Pix format");
+                    string word = iter.GetText(PageIteratorLevel.Word);
+                    float conf = iter.GetConfidence(PageIteratorLevel.Word);
 
-                    using (var page = engine.Process(pix))
+                    if (!string.IsNullOrWhiteSpace(word))
                     {
-                        if (page == null)
-                            throw new InvalidOperationException("Failed to process image");
+                        if (iter.TryGetBoundingBox(PageIteratorLevel.Word, out var rect))
+                        {
+                            results.Add((word, conf, rect));
+                        }
+                    }
 
-                        string text = page.GetText();
-                        return string.IsNullOrEmpty(text) ? string.Empty : text.Trim();
+                } while (iter.Next(PageIteratorLevel.Word));
+            }
+
+            return results;
+        }
+
+        private Color GetConfidenceColor(float confidence)
+        {
+            // confidence: 0 → 100
+
+            if (confidence >= 85)
+                return Color.Black;        // very strong
+            else if (confidence >= 70)
+                return Color.DarkGreen;    // good
+            else if (confidence >= 50)
+                return Color.Orange;       // medium
+            else
+                return Color.Red;          // poor
+        }
+
+        public Bitmap DrawConfidenceOverlay(Bitmap image, List<(string word, float confidence, Rect bounds)> words)
+        {
+            Bitmap output = new Bitmap(image);
+
+            using (Graphics g = Graphics.FromImage(output))
+            {
+                foreach (var item in words)
+                {
+                    var color = GetConfidenceColor(item.confidence);
+
+                    using (Pen pen = new Pen(color, 2))
+                    using (Brush brush = new SolidBrush(color))
+                    using (Font font = new Font("Segoe UI", 10, FontStyle.Bold))
+                    {
+                        var rect = new Rectangle(
+                                    item.bounds.X1,
+                                    item.bounds.Y1,
+                                    item.bounds.X2 - item.bounds.X1,
+                                    item.bounds.Y2 - item.bounds.Y1
+                                );
+
+                        // Draw bounding box
+                        g.DrawRectangle(pen, rect);
+
+                        // Draw text + confidence
+                        string label = $"{item.word} ({item.confidence:0})";
+                        g.DrawString(label, font, brush, rect.X, rect.Y - 15);
                     }
                 }
             }
-            catch (Exception ex)
-            {
-                throw new Exception($"OCR text extraction failed: {ex.Message}", ex);
-            }
+
+            return output;
         }
 
-        public async Task<string> ReadTextAsync(Bitmap image)
+        public string ReconstructText(List<(string word, float confidence, Rect bounds)> words)
         {
-            return await Task.Run(() => ReadText(image));
+            // 1. Sort by Y (top to bottom)
+            var sorted = words.OrderBy(w => w.bounds.Y1).ToList();
+
+            List<List<(string word, float conf, Rect bounds)>> lines = new();
+
+            int lineThreshold = 15; // adjust if needed
+
+            foreach (var w in sorted)
+            {
+                bool added = false;
+
+                foreach (var line in lines)
+                {
+                    // Compare Y with first word in line
+                    if (Math.Abs(line[0].bounds.Y1 - w.bounds.Y1) < lineThreshold)
+                    {
+                        line.Add(w);
+                        added = true;
+                        break;
+                    }
+                }
+
+                if (!added)
+                {
+                    lines.Add(new List<(string, float, Rect)> { w });
+                }
+            }
+
+            // 2. Sort each line by X (left to right)
+            var finalText = new List<string>();
+
+            foreach (var line in lines)
+            {
+                var ordered = line.OrderBy(w => w.bounds.X1).ToList();
+
+                string lineText = "";
+
+                for (int i = 0; i < ordered.Count; i++)
+                {
+                    lineText += ordered[i].word;
+
+                    if (i < ordered.Count - 1)
+                    {
+                        int gap = ordered[i + 1].bounds.X1 - ordered[i].bounds.X2;
+
+                        // Dynamic spacing
+                        if (gap > 40)
+                            lineText += "   ";   // big gap
+                        else if (gap > 20)
+                            lineText += "  ";    // medium gap
+                        else
+                            lineText += " ";     // normal space
+                    }
+                }
+
+                finalText.Add(lineText);
+            }
+
+            return string.Join(Environment.NewLine, finalText);
         }
 
         // Dispose pattern for proper cleanup

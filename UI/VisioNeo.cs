@@ -497,12 +497,18 @@
                 // This UI update is fine (called from UI thread)
                 VisualPB.Image?.Dispose();
                 VisualPB.Image = (Bitmap)deskewed.Clone();
+                var words = await Task.Run(() => ocrService.ReadWordsWithConfidence(deskewed));
 
-                string text = await Task.Run(() => ocrService.ReadText(deskewed));
+                // 🔥 Draw overlay
+                Bitmap overlay = ocrService.DrawConfidenceOverlay(deskewed, words);
+
+                VisualPB.Image?.Dispose();
+                VisualPB.Image = overlay;
+
+                string formattedText = ocrService.ReconstructText(words);
+                txtOCRResult.Text = formattedText;
                 OCR_Panel.Visible = true;
 
-                // This runs on UI thread after await, so it's safe
-                txtOCRResult.Text = text;
 
                 deskewed.Dispose();
                 captured.Dispose();
