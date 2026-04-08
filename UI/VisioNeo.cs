@@ -21,12 +21,15 @@
         // Color Detection
         private bool isDrawing = false;
         private bool isTeachMode = false;
-        private Point startPoint;
-        private Rectangle selectedROI;
-
-        private Color taughtColor = Color.Empty;
         private bool isInspectionMode = false;
-        private string roiLabelText = "";
+        private Point startPoint;
+        private List<Rectangle> roiList = new List<Rectangle>();
+        private List<Color> taughtColors = new List<Color>();
+        private List<string> roiLabels = new List<string>();
+
+        private Rectangle currentROI; // 🔥 for drawing only
+        private List<bool> roiResults = new List<bool>(); // 🔥 PASS/FAIL per ROI
+
 
         public VisioNeo()
         {
@@ -643,7 +646,7 @@
             w = Math.Min(w, VisualPB.Width - x);
             h = Math.Min(h, VisualPB.Height - y);
 
-            selectedROI = new Rectangle(x, y, w, h);
+            currentROI = new Rectangle(x, y, w, h);
 
             VisualPB.Invalidate();
         }
@@ -656,75 +659,50 @@
             checkCD_btn.Visible = true;
             ClearCD_btn.Visible = true;
 
-            TeachColor();   // 🔥 IMPORTANT
+            AddROIAndTeach();   // 🔥 IMPORTANT
         }
         private void VisualPB_Paint(object sender, PaintEventArgs e)
         {
-            if (selectedROI != Rectangle.Empty)
+            for (int i = 0; i < roiList.Count; i++)
             {
-                Color borderColor;
+                var roi = roiList[i];
+                var label = roiLabels[i];
 
-                if (isTeachMode && isDrawing)
+                Color borderColor = Color.Lime;
+
+                if (i < roiResults.Count)
                 {
-                    // 🔵 While drawing → Blue
-                    borderColor = Color.Blue;
-                }
-                else if (isInspectionMode)
-                {
-                    // 🟢 After teaching → use taught color OR status color
-                    borderColor = taughtColor != Color.Empty ? taughtColor : Color.Lime;
-                }
-                else
-                {
-                    // Default fallback
-                    borderColor = Color.Lime;
+                    borderColor = roiResults[i] ? Color.Lime : Color.Red;
                 }
 
                 using (Pen pen = new Pen(borderColor, 2))
+                    e.Graphics.DrawRectangle(pen, roi);
+
+                using (Font font = new Font("Segoe UI", 7))
+                using (Brush textBrush = new SolidBrush(borderColor))
                 {
-                    e.Graphics.DrawRectangle(pen, selectedROI);
+                    string resultText = roiResults[i] ? "PASS" : "FAIL";
+                    e.Graphics.DrawString($"{label} ({resultText})", font, textBrush, roi.X, roi.Y - 12);
                 }
-
-                // 🔥 DRAW TEXT ABOVE RECTANGLE
-                if (!string.IsNullOrEmpty(roiLabelText))
+            }
+            // 🔵 Draw current ROI while dragging
+            if (isDrawing && currentROI != Rectangle.Empty)
+            {
+                using (Pen pen = new Pen(Color.Blue, 2))
                 {
-                    using (Font font = new Font("Segoe UI", 7, FontStyle.Italic))
-                    {
-                        SizeF textSize = e.Graphics.MeasureString(roiLabelText, font);
-
-                        float textX = selectedROI.X;
-                        float textY = selectedROI.Y - textSize.Height - 2;
-
-                        // prevent going outside top
-                        if (textY < 0) textY = selectedROI.Y + 2;
-
-                        RectangleF bgRect = new RectangleF(
-                            textX,
-                            textY,
-                            textSize.Width + 6,
-                            textSize.Height + 4
-                        );
-
-                        //using (Brush bgBrush = new SolidBrush(Color.FromArgb(180, Color.Black)))
-                        //    e.Graphics.FillRectangle(bgBrush, bgRect);
-
-                        using (Brush textBrush = new SolidBrush(Color.Blue))
-                            e.Graphics.DrawString(roiLabelText, font, textBrush, textX + 3, textY + 2);
-                    }
+                    e.Graphics.DrawRectangle(pen, currentROI);
                 }
             }
         }
 
-        private void TeachColor()
+        private void AddROIAndTeach()
         {
             try
             {
-                if (lastFrame == null || selectedROI.Width < 5 || selectedROI.Height < 5)
+                if (lastFrame == null || currentROI.Width < 5 || currentROI.Height < 5)
                     return;
 
                 Bitmap bmp;
-
-                // 🔥 THREAD SAFE COPY
                 lock (this)
                 {
                     bmp = (Bitmap)lastFrame.Clone();
@@ -734,40 +712,36 @@
                 float scaleY = (float)bmp.Height / VisualPB.Height;
 
                 Rectangle realROI = new Rectangle(
-                    (int)(selectedROI.X * scaleX),
-                    (int)(selectedROI.Y * scaleY),
-                    (int)(selectedROI.Width * scaleX),
-                    (int)(selectedROI.Height * scaleY)
+                    (int)(currentROI.X * scaleX),
+                    (int)(currentROI.Y * scaleY),
+                    (int)(currentROI.Width * scaleX),
+                    (int)(currentROI.Height * scaleY)
                 );
 
-                // 🔥 CLAMP ROI INSIDE IMAGE
                 realROI = ClampRectangle(realROI, bmp.Width, bmp.Height);
 
                 if (realROI.Width <= 0 || realROI.Height <= 0)
                     return;
 
-                taughtColor = GetDominantColorSafe(bmp, realROI);
+                Color color = GetDominantColorSafe(bmp, realROI);
 
-                using (Graphics g = Graphics.FromImage(bmp))
-                using (Brush b = new SolidBrush(Color.FromArgb(120, taughtColor)))
-                {
-                    g.FillRectangle(b, realROI);
-                }
+                // ✅ STORE MULTIPLE
+                roiList.Add(currentROI);
+                taughtColors.Add(color);
+                roiLabels.Add($"R{color.R} G{color.G} B{color.B}");
+                roiResults.Add(true);
 
-                VisualPB.Image?.Dispose();
-                VisualPB.Image = bmp;
+                // reset current ROI so next draw starts fresh
+                currentROI = Rectangle.Empty;
 
-                isTeachMode = false;
-                isInspectionMode = true;  // ❗ stop auto inspection
+                isFrozen = false;
+                isTeachMode = true; // 🔥 KEEP DRAW MODE ACTIVE
 
-                isFrozen = false;          // 🔥 resume live camera
-
-                roiLabelText = $"R-{taughtColor.R} G-{taughtColor.G} B-{taughtColor.B}";
-                VisualPB.Invalidate(); // 🔥 force redraw
+                VisualPB.Invalidate();
             }
             catch (Exception ex)
             {
-                HandleException(ex, "Teach Color");
+                HandleException(ex, "Multi ROI Teach");
             }
         }
 
@@ -803,19 +777,6 @@
             );
         }
 
-        private Rectangle MapToImageROI(Bitmap bmp)
-        {
-            float scaleX = (float)bmp.Width / VisualPB.Width;
-            float scaleY = (float)bmp.Height / VisualPB.Height;
-
-            return new Rectangle(
-                (int)(selectedROI.X * scaleX),
-                (int)(selectedROI.Y * scaleY),
-                (int)(selectedROI.Width * scaleX),
-                (int)(selectedROI.Height * scaleY)
-            );
-        }
-
         private double ColorDistance(Color c1, Color c2)
         {
             int dr = c1.R - c2.R;
@@ -840,7 +801,7 @@
         {
             try
             {
-                if (lastFrame == null || selectedROI.Width <= 0)
+                if (lastFrame == null || roiList.Count == 0)
                 {
                     MessageBox.Show("No ROI or frame available!");
                     return;
@@ -848,51 +809,38 @@
 
                 // 🔒 Freeze current frame
                 //isFrozen = true;
+                bool overallPass = true;
 
                 Bitmap bmp;
-
                 lock (this)
                 {
                     bmp = (Bitmap)lastFrame.Clone();
                 }
 
-                Rectangle roi = MapToImageROI(bmp);
-                roi = ClampRectangle(roi, bmp.Width, bmp.Height);
-
-                if (roi.Width <= 0 || roi.Height <= 0)
+                for (int i = 0; i < roiList.Count; i++)
                 {
-                    MessageBox.Show("Invalid ROI!");
-                    return;
+                    Rectangle roi = MapToImageROIForList(bmp, roiList[i]);
+
+                    Color currentColor = GetDominantColorSafe(bmp, roi);
+                    double diff = ColorDistance(currentColor, taughtColors[i]);
+
+                    bool isPass = diff < 40;
+                    roiResults[i] = isPass;
+                    if (!isPass)
+                        overallPass = false;
+
+                    using (Graphics g = Graphics.FromImage(bmp))
+                    {
+                        Color overlayColor = isPass ? Color.Lime : Color.Red;
+
+                        using (Pen pen = new Pen(overlayColor, 2))
+                            g.DrawRectangle(pen, roi);
+                    }
                 }
 
-                // 🔍 Get current color
-                Color currentColor = GetDominantColorSafe(bmp, roi);
-
-                double diff = ColorDistance(currentColor, taughtColor);
-
-                bool isPass = diff < 40;
-
-                // 🎯 Presence logic (optional enhancement)
-                bool isPresent = currentColor != Color.Black;
-
-                // 🧾 Final Result
-                bool finalPass = isPass && isPresent;
-
-                Res_CD_Lbl.Text = finalPass ? "Result : PASS" : "Result : FAIL";
-                Res_CD_Lbl.ForeColor = finalPass ? Color.Green : Color.Red;
-
-                // 🔥 Draw overlay for feedback
-                using (Graphics g = Graphics.FromImage(bmp))
-                {
-                    Color overlayColor = finalPass ? Color.Lime : Color.Red;
-
-                    using (Pen pen = new Pen(overlayColor, 3))
-                        g.DrawRectangle(pen, roi);
-
-                    using (Brush b = new SolidBrush(Color.FromArgb(80, overlayColor)))
-                        g.FillRectangle(b, roi);
-                }
-
+                Res_CD_Lbl.Text = overallPass ? "Result : PASS" : "Result : FAIL";
+                Res_CD_Lbl.ForeColor = overallPass ? Color.Green : Color.Red;
+                VisualPB.Invalidate();
                 VisualPB.Image?.Dispose();
                 VisualPB.Image = bmp;
             }
@@ -900,6 +848,19 @@
             {
                 HandleException(ex, "Manual Inspection");
             }
+        }
+
+        private Rectangle MapToImageROIForList(Bitmap bmp, Rectangle roiPB)
+        {
+            float scaleX = (float)bmp.Width / VisualPB.Width;
+            float scaleY = (float)bmp.Height / VisualPB.Height;
+
+            return ClampRectangle(new Rectangle(
+                (int)(roiPB.X * scaleX),
+                (int)(roiPB.Y * scaleY),
+                (int)(roiPB.Width * scaleX),
+                (int)(roiPB.Height * scaleY)
+            ), bmp.Width, bmp.Height);
         }
 
         private void ClearCD_btn_Click(object sender, EventArgs e)
@@ -913,16 +874,20 @@
             try
             {
                 // 🔥 Reset all color detection data
-                selectedROI = Rectangle.Empty;
-                taughtColor = Color.Empty;
-                roiLabelText = "";
+                roiList.Clear();
+                taughtColors.Clear();
+                roiLabels.Clear();
+                currentROI = Rectangle.Empty;
 
                 isTeachMode = false;
+                roiResults.Clear();
                 isInspectionMode = false;
                 isDrawing = false;
 
                 // 🔓 Resume live camera
                 isFrozen = false;
+                checkCD_btn.Visible = false;
+                ClearCD_btn.Visible = false;
 
                 // 🎯 Reset UI
                 Res_CD_Lbl.Text = "Result : ---";
