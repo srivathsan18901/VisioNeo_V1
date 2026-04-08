@@ -26,6 +26,7 @@
 
         private Color taughtColor = Color.Empty;
         private bool isInspectionMode = false;
+        private string roiLabelText = "";
 
         public VisioNeo()
         {
@@ -263,22 +264,6 @@
                         {
                             lastFrame?.Dispose();
                             lastFrame = (Bitmap)finalImage.Clone();
-                        }
-
-                        // 🔥 INSPECTION
-                        if (isInspectionMode && selectedROI.Width > 0)
-                        {
-                            Color currentColor = GetDominantColorSafe(finalImage, MapToImageROI(finalImage));
-
-                            double diff = ColorDistance(currentColor, taughtColor);
-
-                            bool isPass = diff < 40; // 🔥 tolerance
-
-                            VisualPB.Invoke(() =>
-                            {
-                                Res_CD_Lbl.Text = isPass ? "PASS" : "FAIL";
-                                Res_CD_Lbl.ForeColor = isPass ? Color.Lime : Color.Red;
-                            });
                         }
 
                         VisualPB.Invoke(() =>
@@ -693,6 +678,34 @@
                 {
                     e.Graphics.DrawRectangle(pen, selectedROI);
                 }
+
+                // 🔥 DRAW TEXT ABOVE RECTANGLE
+                if (!string.IsNullOrEmpty(roiLabelText))
+                {
+                    using (Font font = new Font("Segoe UI", 7, FontStyle.Italic))
+                    {
+                        SizeF textSize = e.Graphics.MeasureString(roiLabelText, font);
+
+                        float textX = selectedROI.X;
+                        float textY = selectedROI.Y - textSize.Height - 2;
+
+                        // prevent going outside top
+                        if (textY < 0) textY = selectedROI.Y + 2;
+
+                        RectangleF bgRect = new RectangleF(
+                            textX,
+                            textY,
+                            textSize.Width + 6,
+                            textSize.Height + 4
+                        );
+
+                        //using (Brush bgBrush = new SolidBrush(Color.FromArgb(180, Color.Black)))
+                        //    e.Graphics.FillRectangle(bgBrush, bgRect);
+
+                        using (Brush textBrush = new SolidBrush(Color.Blue))
+                            e.Graphics.DrawString(roiLabelText, font, textBrush, textX + 3, textY + 2);
+                    }
+                }
             }
         }
 
@@ -739,9 +752,12 @@
                 VisualPB.Image = bmp;
 
                 isTeachMode = false;
-                isInspectionMode = true;
+                isInspectionMode = true;  // ❗ stop auto inspection
 
-                MessageBox.Show($"Color Taught: {taughtColor}");
+                isFrozen = false;          // 🔥 resume live camera
+
+                roiLabelText = $"R-{taughtColor.R} G-{taughtColor.G} B-{taughtColor.B}";
+                VisualPB.Invalidate(); // 🔥 force redraw
             }
             catch (Exception ex)
             {
@@ -812,6 +828,119 @@
             int h = Math.Min(rect.Height, maxH - y);
 
             return new Rectangle(x, y, w, h);
+        }
+
+        private void checkCD_btn_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                if (lastFrame == null || selectedROI.Width <= 0)
+                {
+                    MessageBox.Show("No ROI or frame available!");
+                    return;
+                }
+
+                // 🔒 Freeze current frame
+                //isFrozen = true;
+
+                Bitmap bmp;
+
+                lock (this)
+                {
+                    bmp = (Bitmap)lastFrame.Clone();
+                }
+
+                Rectangle roi = MapToImageROI(bmp);
+                roi = ClampRectangle(roi, bmp.Width, bmp.Height);
+
+                if (roi.Width <= 0 || roi.Height <= 0)
+                {
+                    MessageBox.Show("Invalid ROI!");
+                    return;
+                }
+
+                // 🔍 Get current color
+                Color currentColor = GetDominantColorSafe(bmp, roi);
+
+                double diff = ColorDistance(currentColor, taughtColor);
+
+                bool isPass = diff < 40;
+
+                // 🎯 Presence logic (optional enhancement)
+                bool isPresent = currentColor != Color.Black;
+
+                // 🧾 Final Result
+                bool finalPass = isPass && isPresent;
+
+                Res_CD_Lbl.Text = finalPass ? "Result : PASS" : "Result : FAIL";
+                Res_CD_Lbl.ForeColor = finalPass ? Color.Green : Color.Red;
+
+                // 🔥 Draw overlay for feedback
+                using (Graphics g = Graphics.FromImage(bmp))
+                {
+                    Color overlayColor = finalPass ? Color.Lime : Color.Red;
+
+                    using (Pen pen = new Pen(overlayColor, 3))
+                        g.DrawRectangle(pen, roi);
+
+                    using (Brush b = new SolidBrush(Color.FromArgb(80, overlayColor)))
+                        g.FillRectangle(b, roi);
+                }
+
+                VisualPB.Image?.Dispose();
+                VisualPB.Image = bmp;
+            }
+            catch (Exception ex)
+            {
+                HandleException(ex, "Manual Inspection");
+            }
+        }
+
+        private void ClearCD_btn_Click(object sender, EventArgs e)
+        {
+            //clearCD();
+        }
+
+        private void clearCD()
+        {
+
+            try
+            {
+                // 🔥 Reset all color detection data
+                selectedROI = Rectangle.Empty;
+                taughtColor = Color.Empty;
+                roiLabelText = "";
+
+                isTeachMode = false;
+                isInspectionMode = false;
+                isDrawing = false;
+
+                // 🔓 Resume live camera
+                isFrozen = false;
+
+                // 🎯 Reset UI
+                Res_CD_Lbl.Text = "Result : ---";
+                Res_CD_Lbl.ForeColor = Color.Black;
+
+                VisualPB.Cursor = Cursors.Default;
+
+                // 🔄 Force redraw (removes rectangle + text)
+                VisualPB.Invalidate();
+
+                // 🧹 OPTIONAL: clear current image overlay (reload last frame cleanly)
+                if (lastFrame != null)
+                {
+                    lock (this)
+                    {
+                        VisualPB.Image?.Dispose();
+                        VisualPB.Image = (Bitmap)lastFrame.Clone();
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                HandleException(ex, "Clear Color Detection");
+            }
         }
     }
 }
