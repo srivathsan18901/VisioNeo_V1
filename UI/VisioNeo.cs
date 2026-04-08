@@ -38,6 +38,8 @@
             Param_Panel.Visible = false;
             ToolsPanel.Visible = false;
             devListTBox.Visible = false;
+            checkCD_btn.Visible = false;
+            ClearCD_btn.Visible = false;
             OCR_Panel.Visible = false;
             //TabCntl.Visible = false;
             VisualPB.SizeMode = PictureBoxSizeMode.StretchImage;
@@ -147,6 +149,7 @@
 
         private void CloseBTN_Click(object sender, EventArgs e)
         {
+            clearCD();
             cameraService.Disconnect();
             Application.Exit();
         }
@@ -216,6 +219,7 @@
                     CnctBTN.ForeColor = Color.SeaGreen;
                     isConnected = false;
                     isFrozen = false;
+                    clearCD(); // Reset color detection state on disconnect
                     Param_Panel.Visible = false;
                     ToolsPanel.Visible = false;
                 }
@@ -649,6 +653,8 @@
             if (!isTeachMode) return;
 
             isDrawing = false;
+            checkCD_btn.Visible = true;
+            ClearCD_btn.Visible = true;
 
             TeachColor();   // 🔥 IMPORTANT
         }
@@ -898,7 +904,7 @@
 
         private void ClearCD_btn_Click(object sender, EventArgs e)
         {
-            //clearCD();
+            clearCD();
         }
 
         private void clearCD()
