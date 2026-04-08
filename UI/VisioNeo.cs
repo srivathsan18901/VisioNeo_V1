@@ -18,6 +18,15 @@
         private bool isFrozen = false;
         private bool isHandlingException = false;
 
+        // Color Detection
+        private bool isDrawing = false;
+        private bool isTeachMode = false;
+        private Point startPoint;
+        private Rectangle selectedROI;
+
+        private Color taughtColor = Color.Empty;
+        private bool isInspectionMode = false;
+
         public VisioNeo()
         {
             InitializeComponent();
@@ -58,6 +67,11 @@
 
             cbDisplayMode.SelectedIndex = 0;
             this.TabCntl.DrawItem += new DrawItemEventHandler(this.tabControl1_DrawItem);
+
+            VisualPB.MouseDown += VisualPB_MouseDown;
+            VisualPB.MouseMove += VisualPB_MouseMove;
+            VisualPB.MouseUp += VisualPB_MouseUp;
+            VisualPB.Paint += VisualPB_Paint;
         }
 
         private void OnApplicationExit(object sender, EventArgs e)
@@ -245,26 +259,36 @@
 
                         Bitmap finalImage = imageService.Process(frame, currentDisplayMode);
 
-                        lastFrame?.Dispose();
-                        lastFrame = (Bitmap)finalImage.Clone();
+                        lock (this)
+                        {
+                            lastFrame?.Dispose();
+                            lastFrame = (Bitmap)finalImage.Clone();
+                        }
+
+                        // 🔥 INSPECTION
+                        if (isInspectionMode && selectedROI.Width > 0)
+                        {
+                            Color currentColor = GetDominantColorSafe(finalImage, MapToImageROI(finalImage));
+
+                            double diff = ColorDistance(currentColor, taughtColor);
+
+                            bool isPass = diff < 40; // 🔥 tolerance
+
+                            VisualPB.Invoke(() =>
+                            {
+                                Res_CD_Lbl.Text = isPass ? "PASS" : "FAIL";
+                                Res_CD_Lbl.ForeColor = isPass ? Color.Lime : Color.Red;
+                            });
+                        }
 
                         VisualPB.Invoke(() =>
                         {
-                            try
-                            {
-                                VisualPB.Image?.Dispose();
-                                VisualPB.Image = finalImage;
-                            }
-                            catch (Exception ex)
-                            {
-                                // Handle UI update errors silently or log them
-                                System.Diagnostics.Debug.WriteLine($"UI Update Error: {ex.Message}");
-                            }
+                            VisualPB.Image?.Dispose();
+                            VisualPB.Image = finalImage;
                         });
                     }
                     catch (Exception ex)
                     {
-                        // Critical error in frame processing - disconnect
                         VisualPB.Invoke(() => HandleException(ex, "Frame Processing"));
                     }
                 });
@@ -474,11 +498,6 @@
 
         }
 
-        private void OCV_btn_Click(object sender, EventArgs e)
-        {
-
-        }
-
         private async void OCR_btn_Click(object sender, EventArgs e)
         {
             try  // Add overall try-catch
@@ -598,6 +617,201 @@
                 isHandlingException = false;
             }
         }
+        private void CD_Btn_Click(object sender, EventArgs e)
+        {
+            if (lastFrame == null)
+            {
+                MessageBox.Show("No frame available!");
+                return;
+            }
 
+            isFrozen = true;
+            isTeachMode = true;
+            isInspectionMode = false;
+
+            VisualPB.Cursor = Cursors.Cross;
+        }
+
+        private void VisualPB_MouseDown(object sender, MouseEventArgs e)
+        {
+            if (!isTeachMode) return;
+
+            isDrawing = true;
+            startPoint = e.Location;
+        }
+
+        private void VisualPB_MouseMove(object sender, MouseEventArgs e)
+        {
+            if (!isDrawing) return;
+
+            int x = Math.Max(0, Math.Min(startPoint.X, e.X));
+            int y = Math.Max(0, Math.Min(startPoint.Y, e.Y));
+
+            int w = Math.Abs(startPoint.X - e.X);
+            int h = Math.Abs(startPoint.Y - e.Y);
+
+            // 🔥 LIMIT TO PICTUREBOX SIZE
+            w = Math.Min(w, VisualPB.Width - x);
+            h = Math.Min(h, VisualPB.Height - y);
+
+            selectedROI = new Rectangle(x, y, w, h);
+
+            VisualPB.Invalidate();
+        }
+
+        private void VisualPB_MouseUp(object sender, MouseEventArgs e)
+        {
+            if (!isTeachMode) return;
+
+            isDrawing = false;
+
+            TeachColor();   // 🔥 IMPORTANT
+        }
+        private void VisualPB_Paint(object sender, PaintEventArgs e)
+        {
+            if (selectedROI != Rectangle.Empty)
+            {
+                Color borderColor;
+
+                if (isTeachMode && isDrawing)
+                {
+                    // 🔵 While drawing → Blue
+                    borderColor = Color.Blue;
+                }
+                else if (isInspectionMode)
+                {
+                    // 🟢 After teaching → use taught color OR status color
+                    borderColor = taughtColor != Color.Empty ? taughtColor : Color.Lime;
+                }
+                else
+                {
+                    // Default fallback
+                    borderColor = Color.Lime;
+                }
+
+                using (Pen pen = new Pen(borderColor, 2))
+                {
+                    e.Graphics.DrawRectangle(pen, selectedROI);
+                }
+            }
+        }
+
+        private void TeachColor()
+        {
+            try
+            {
+                if (lastFrame == null || selectedROI.Width < 5 || selectedROI.Height < 5)
+                    return;
+
+                Bitmap bmp;
+
+                // 🔥 THREAD SAFE COPY
+                lock (this)
+                {
+                    bmp = (Bitmap)lastFrame.Clone();
+                }
+
+                float scaleX = (float)bmp.Width / VisualPB.Width;
+                float scaleY = (float)bmp.Height / VisualPB.Height;
+
+                Rectangle realROI = new Rectangle(
+                    (int)(selectedROI.X * scaleX),
+                    (int)(selectedROI.Y * scaleY),
+                    (int)(selectedROI.Width * scaleX),
+                    (int)(selectedROI.Height * scaleY)
+                );
+
+                // 🔥 CLAMP ROI INSIDE IMAGE
+                realROI = ClampRectangle(realROI, bmp.Width, bmp.Height);
+
+                if (realROI.Width <= 0 || realROI.Height <= 0)
+                    return;
+
+                taughtColor = GetDominantColorSafe(bmp, realROI);
+
+                using (Graphics g = Graphics.FromImage(bmp))
+                using (Brush b = new SolidBrush(Color.FromArgb(120, taughtColor)))
+                {
+                    g.FillRectangle(b, realROI);
+                }
+
+                VisualPB.Image?.Dispose();
+                VisualPB.Image = bmp;
+
+                isTeachMode = false;
+                isInspectionMode = true;
+
+                MessageBox.Show($"Color Taught: {taughtColor}");
+            }
+            catch (Exception ex)
+            {
+                HandleException(ex, "Teach Color");
+            }
+        }
+
+        private Color GetDominantColorSafe(Bitmap bmp, Rectangle roi)
+        {
+            long r = 0, g = 0, b = 0;
+            int count = 0;
+
+            for (int y = roi.Top; y < roi.Bottom; y++)
+            {
+                if (y < 0 || y >= bmp.Height) continue;
+
+                for (int x = roi.Left; x < roi.Right; x++)
+                {
+                    if (x < 0 || x >= bmp.Width) continue;
+
+                    Color pixel = bmp.GetPixel(x, y);
+
+                    r += pixel.R;
+                    g += pixel.G;
+                    b += pixel.B;
+
+                    count++;
+                }
+            }
+
+            if (count == 0) return Color.Black;
+
+            return Color.FromArgb(
+                (int)(r / count),
+                (int)(g / count),
+                (int)(b / count)
+            );
+        }
+
+        private Rectangle MapToImageROI(Bitmap bmp)
+        {
+            float scaleX = (float)bmp.Width / VisualPB.Width;
+            float scaleY = (float)bmp.Height / VisualPB.Height;
+
+            return new Rectangle(
+                (int)(selectedROI.X * scaleX),
+                (int)(selectedROI.Y * scaleY),
+                (int)(selectedROI.Width * scaleX),
+                (int)(selectedROI.Height * scaleY)
+            );
+        }
+
+        private double ColorDistance(Color c1, Color c2)
+        {
+            int dr = c1.R - c2.R;
+            int dg = c1.G - c2.G;
+            int db = c1.B - c2.B;
+
+            return Math.Sqrt(dr * dr + dg * dg + db * db);
+        }
+
+        private Rectangle ClampRectangle(Rectangle rect, int maxW, int maxH)
+        {
+            int x = Math.Max(0, rect.X);
+            int y = Math.Max(0, rect.Y);
+
+            int w = Math.Min(rect.Width, maxW - x);
+            int h = Math.Min(rect.Height, maxH - y);
+
+            return new Rectangle(x, y, w, h);
+        }
     }
 }

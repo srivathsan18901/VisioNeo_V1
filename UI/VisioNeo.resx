@@ -17165,7 +17165,7 @@
   <data name="OCR_Panel.BackgroundImage" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
         iVBORw0KGgoAAAANSUhEUgAACWAAAAcICAIAAAA3t21TAAAABGdBTUEAALGPC/xhBQAAAAlwSFlzAAAO
-        wgAADsIBFShKgAAA/7JJREFUeF7snYty27rSrPf7v+TZ/17XxLGT2LpLdk7ZY3fa0yREURSvXfVVKqbA
+        wQAADsEBuJFr7QAA/7JJREFUeF7snYty27rSrPf7v+TZ/17XxLGT2LpLdk7ZY3fa0yREURSvXfVVKqbA
         IQACA3CaAP+zOZ2MAU/7/epwWB+P2+fnYHM6rY9HTdmWw2UcXxbF/uXX7vnX9vRrfXheH543x5ft6fXP
         p93xaXdc7U/puFowxsyD6OzBan9a7U/4Kbp/sHu2H+gPVHvcoKfd8edmr8nMkuHu+YmPaZWZNDFP3pxO
         2+fn3ctLzJPjT9MDu5cXwMfXxyPg5w61YIyZOtzHue9zmjpfYW4KV/vmdFodDk/7vSYzxsyVCCZvTif2
@@ -29220,7 +29220,7 @@
   <data name="Resume_btn.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
         iVBORw0KGgoAAAANSUhEUgAAAgAAAAIACAYAAAD0eNT6AAAABGdBTUEAALGPC/xhBQAAAAlwSFlzAAAN
-        0gAADdIBb5L+jgAAABl0RVh0U29mdHdhcmUAd3d3Lmlua3NjYXBlLm9yZ5vuPBoAAFt3SURBVHhe7d15
+        0QAADdEBwivf4wAAABl0RVh0U29mdHdhcmUAd3d3Lmlua3NjYXBlLm9yZ5vuPBoAAFt3SURBVHhe7d15
         lBbVmT/wCRqNidvJZDKZHM/k50kms5wz56KUiktULmvJ5oIrIqi4YVTcE5cYXNCIMYmJ0RiX4MqoqAET
         dzSgggLyVnXTNGt309ut8hg1M6Jx4f7OLd5O8Hmapt/aq97vH59zZp4kdHfVvfd733pv3fsPWut/AIB8
         c6X4sivFt1wpBrlSjHSlmOhKcb4rxQxHil85UjziSDHPkeJZR4oFjhSvOVIsdaRwHCmaHSk2OFJ0OFL4
