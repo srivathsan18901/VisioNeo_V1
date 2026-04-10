@@ -890,8 +890,8 @@
                 ClearCD_btn.Visible = false;
 
                 // 🎯 Reset UI
-                Res_CD_Lbl.Text = "Result : ---";
-                Res_CD_Lbl.ForeColor = Color.Black;
+                //Res_CD_Lbl.Text = "Result : ---";
+                //Res_CD_Lbl.ForeColor = Color.Black;
 
                 VisualPB.Cursor = Cursors.Default;
 
@@ -912,6 +912,11 @@
             {
                 HandleException(ex, "Clear Color Detection");
             }
+        }
+
+        private void label6_Click(object sender, EventArgs e)
+        {
+
         }
     }
 }
