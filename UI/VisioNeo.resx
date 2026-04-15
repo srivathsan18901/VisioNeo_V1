@@ -17162,6 +17162,26 @@
         1YvgmBDcOI6jcU/mmI4ckYgNoYXs2IXpmIjuaItkKI/wmI4KQBD5KBEBAQA7
 </value>
   </data>
+  <data name="ClearOD_btn.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+    <value>
+        iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAYAAABXAvmHAAAABGdBTUEAALGPC/xhBQAAAAlwSFlzAAAL
+        DAAACwwBP0AiyAAAA2JJREFUaEPtmVtPGkEUx/0ODWufGqxttBRlYQFB5X5VLqKOqPEz+mBt0iZtE7Xp
+        F6ncFhZYlvRlZ5PTjHGMgS7MLguGhl+yT8DM7w9zTtizS0sLFiz4//lzcF7qF88rSuGsouTLpcHXraIl
+        REqiO1wR+VCl4dy1Zh+leIH6xXPcL5xBP38Kyn5Zk7Pli8H3TYrIR5DIh3GTD4O4GYKGc0drOLcn22dQ
+        vp8rkwDQy55ochZNtvgzBuXFjV0QnTtQdwS0hiNgbh89eWXvBJQsAjl9pMnpQ3OLP0NPvvExCI0PAait
+        +7Xqms/YPo9nXle+lzmGXvoI5NQhlpOl8uDnWWl6YuVR8vX1Laiv+aH2zourq8LB4Od1IQU7Tr6XOgQ5
+        WYJu4gDLsYLhEKzy9fc+EgBqb92/B9fQRSmc3rPIy4kDkONF6MQKhkIYll/1QNXOGwiQL5eUXBmzyHdj
+        BehGC9AJ53E7vD82hBn5ip3HVTvPfoQISvYE9fZOMIt8N5KHTjgH7d09rbOd1S24cQX7T/kVXqu+cemu
+        ORISQs4cYxb5TmgfOjt7IAXTWieQHtpw5vKUbuoQPXabsfLt7Qy0g2lobSW1li/xtPGLyVO68SJ66DYM
+        8lIgBZI/CS1v/CHEi8tTSJch3YZFXvIlSABouqPYsLydxxW7a2wzMEU3kkOdSF5lkW95otB0R8CQ/DS+
+        +UGk3Rxqh/bVuZSnSMEskrYz6lzKU6RgCrUCKXUu5SmSP45avoQ6l/IUUYijpjuqzqU8wUyfv1/htWtu
+        4+flqxcOYFb+E7f569LmgiubS7t+qRCTy/Pw2eaGr5xb+8Z5ZhvCOnkP/OAEuF0WtFvO4G2jWayX98Ld
+        wzWDENOTn0EIM/KkVbLLP4XAN8s+a//MmZUnff7StoGubC6VTX4Kv8Qk8nSNaxuPvnBulU3ewhBWyFO+
+        2wR0s+xVh0VHXROEsFKecvdaQLezCPEwJTYqz3gnRQqUFOqw6KhLwLecgckcGXFPQ55iKgQnsA+2RD50
+        Py15iuEQRgKQhwsN5w6eljyFPYTBI0QQHUFUdwSwrvyYgmWFFPboECaKmFJz+FFtzY+nJU/RDzGBPKW2
+        5kdkPj8tecpwCAvkKeThApnPkxG34SmxAcg5J8VKLsNnfsGCBfPJXy7EcywKdrPxAAAAAElFTkSuQmCC
+</value>
+  </data>
   <data name="ClearCD_btn.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
         iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAYAAABXAvmHAAAABGdBTUEAALGPC/xhBQAAAAlwSFlzAAAL

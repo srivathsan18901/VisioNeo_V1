@@ -27,6 +27,16 @@
         private Rectangle currentROI; // 🔥 for drawing only
         private List<bool> roiResults = new List<bool>(); // 🔥 PASS/FAIL per ROI
 
+        private ObjectDetectionService objService = new ObjectDetectionService();
+
+        private bool isObjectTeachMode = false;
+        private bool isTrackingMode = false;
+
+        private List<Rectangle> objRois = new List<Rectangle>();
+        private List<string> objLabels = new List<string>();
+        private Point taughtCenter;   // reference point
+        private double pixelToMM = 0.05; // 🔥 change based on calibration
+
         public VisioNeo()
         {
             InitializeComponent();
@@ -40,6 +50,9 @@
             checkCD_btn.Visible = false;
             ClearCD_btn.Visible = false;
             OCR_Panel.Visible = false;
+            track_btn.Visible = false;
+            ClearOD_btn.Visible = false;
+
             //TabCntl.Visible = false;
             VisualPB.SizeMode = PictureBoxSizeMode.StretchImage;
 
@@ -219,6 +232,7 @@
                     isConnected = false;
                     isFrozen = false;
                     clearCD(); // Reset color detection state on disconnect
+                    clearOD();
                     Param_Panel.Visible = false;
                     ToolsPanel.Visible = false;
                 }
@@ -260,6 +274,71 @@
                     try
                     {
                         if (isFrozen) return;
+
+                        if (isTrackingMode)
+                        {
+                            Rectangle tracked = objService.MatchTemplate(frame);
+
+                            if (tracked != Rectangle.Empty)
+                            {
+                                int centerX = tracked.X + tracked.Width / 2;
+                                int centerY = tracked.Y + tracked.Height / 2;
+
+                                int dx = centerX - taughtCenter.X;
+                                int dy = centerY - taughtCenter.Y;
+
+                                double dxMM = dx * pixelToMM;
+                                double dyMM = dy * pixelToMM;
+
+                                double distanceMM = Math.Sqrt(dxMM * dxMM + dyMM * dyMM);
+
+                                double tolerance = 2.0; // mm (adjust)
+
+                                bool isOK = distanceMM < tolerance;
+
+                                using (Graphics g = Graphics.FromImage(frame))
+                                {
+                                    // 🟡 Draw tracked object
+                                    using (Pen pen = new Pen(isOK ? Color.Lime : Color.Red, 3))
+                                    {
+                                        g.DrawRectangle(pen, tracked);
+                                    }
+
+                                    // 🟢 Draw taught center (REFERENCE)
+                                    using (Pen refPen = new Pen(Color.Blue, 2))
+                                    {
+                                        int size = 10;
+
+                                        g.DrawLine(refPen,
+                                            taughtCenter.X - size, taughtCenter.Y,
+                                            taughtCenter.X + size, taughtCenter.Y);
+
+                                        g.DrawLine(refPen,
+                                            taughtCenter.X, taughtCenter.Y - size,
+                                            taughtCenter.X, taughtCenter.Y + size);
+                                    }
+
+                                    // 🔵 Draw line between taught and current
+                                    using (Pen linePen = new Pen(Color.Cyan, 2))
+                                    {
+                                        g.DrawLine(linePen,
+                                            taughtCenter.X, taughtCenter.Y,
+                                            centerX, centerY);
+                                    }
+                                }
+
+                                // 🔥 UPDATE LABEL (IMPORTANT: UI THREAD)
+                                VisualPB.Invoke(() =>
+                                {
+                                    Res_OD_Lbl.Text =
+                                       $"Ref: ({taughtCenter.X},{taughtCenter.Y})  |  " +
+                                       $"Cur: ({centerX},{centerY})  |  " +
+                                       $"DX: {dxMM:F2} mm  DY: {dyMM:F2} mm  |  Dist: {distanceMM:F2} mm";
+
+                                    Res_OD_Lbl.ForeColor = isOK ? Color.Green : Color.Red;
+                                });
+                            }
+                        }
 
                         Bitmap finalImage = imageService.Process(frame, currentDisplayMode);
 
@@ -622,7 +701,7 @@
 
         private void VisualPB_MouseDown(object sender, MouseEventArgs e)
         {
-            if (!isTeachMode) return;
+            if (!isTeachMode && !isObjectTeachMode) return;
 
             isDrawing = true;
             startPoint = e.Location;
@@ -649,13 +728,69 @@
 
         private void VisualPB_MouseUp(object sender, MouseEventArgs e)
         {
-            if (!isTeachMode) return;
+            if (!isTeachMode && !isObjectTeachMode) return;
 
             isDrawing = false;
-            checkCD_btn.Visible = true;
-            ClearCD_btn.Visible = true;
 
-            AddROIAndTeach();   // 🔥 IMPORTANT
+            if (isObjectTeachMode)
+            {
+                string label = Prompt.ShowDialog("Enter Object Name:", "Object Label");
+
+                if (string.IsNullOrWhiteSpace(label))
+                    label = "Object";
+                track_btn.Visible = true;
+                ClearOD_btn.Visible = true;
+                AddObjectROI(label);
+            }
+            else if (isTeachMode)
+            {
+                checkCD_btn.Visible = true;
+                ClearCD_btn.Visible = true;
+
+                AddROIAndTeach();
+            }
+        }
+
+        private void AddObjectROI(string label)
+        {
+            if (lastFrame == null || currentROI.Width < 5 || currentROI.Height < 5)
+                return;
+
+            Bitmap bmp;
+            lock (this)
+            {
+                bmp = (Bitmap)lastFrame.Clone();
+            }
+
+            float scaleX = (float)bmp.Width / VisualPB.Width;
+            float scaleY = (float)bmp.Height / VisualPB.Height;
+
+            Rectangle realROI = new Rectangle(
+                (int)(currentROI.X * scaleX),
+                (int)(currentROI.Y * scaleY),
+                (int)(currentROI.Width * scaleX),
+                (int)(currentROI.Height * scaleY)
+            );
+
+            taughtCenter = new Point(
+                realROI.X + realROI.Width / 2,
+                realROI.Y + realROI.Height / 2
+            );
+
+            objRois.Add(currentROI);
+            objLabels.Add(label);
+
+            // 🔥 IMPORTANT → Save template for tracking
+            objService.SetTemplate(bmp, realROI);
+
+            currentROI = Rectangle.Empty;
+
+            // 🔥 IMPORTANT FIX
+            isFrozen = false;   // resume live camera
+
+            isObjectTeachMode = false; // stop teaching mode
+
+            VisualPB.Invalidate();
         }
 
         private void VisualPB_Paint(object sender, PaintEventArgs e)
@@ -914,6 +1049,113 @@
         private void label6_Click(object sender, EventArgs e)
         {
 
+        }
+
+        private void objDec_btn_Click(object sender, EventArgs e)
+        {
+            if (lastFrame == null)
+            {
+                MessageBox.Show("No frame available!");
+                return;
+            }
+
+            isFrozen = true;
+
+            isObjectTeachMode = true;
+            isTrackingMode = false;
+            isTeachMode = false;   // 🔥 IMPORTANT
+
+            VisualPB.Cursor = Cursors.Cross;
+        }
+
+        private void track_btn_Click(object sender, EventArgs e)
+        {
+            if (objLabels.Count == 0)
+            {
+                MessageBox.Show("No object trained!");
+                return;
+            }
+
+            isTrackingMode = true;
+            isFrozen = false;
+        }
+
+        public static class Prompt
+        {
+            public static string ShowDialog(string text, string caption)
+            {
+                Form prompt = new Form()
+                {
+                    Width = 300,
+                    Height = 150,
+                    Text = caption
+                };
+
+                Label lbl = new Label() { Left = 10, Top = 10, Text = text };
+                TextBox input = new TextBox() { Left = 10, Top = 40, Width = 260 };
+
+                Button ok = new Button() { Text = "OK", Left = 200, Width = 70, Top = 70 };
+                ok.Click += (sender, e) => { prompt.Close(); };
+
+                prompt.Controls.Add(lbl);
+                prompt.Controls.Add(input);
+                prompt.Controls.Add(ok);
+
+                prompt.ShowDialog();
+
+                return input.Text;
+            }
+        }
+
+        private void ClearOD_btn_Click(object sender, EventArgs e)
+        {
+            clearOD();
+        }
+
+        private void clearOD()
+        {
+            try
+            {
+                Res_OD_Lbl.Visible = false;
+                Res_OD_Lbl.Text = "Result : ---";
+                Res_OD_Lbl.ForeColor = Color.Black;
+                // 🔥 Clear object data
+                objRois.Clear();
+                objLabels.Clear();
+
+                // 🔥 Reset tracking/template
+                objService = new ObjectDetectionService();
+
+                // 🔥 Reset modes
+                isObjectTeachMode = false;
+                isTrackingMode = false;
+                isDrawing = false;
+
+                // 🔓 Resume live camera
+                isFrozen = false;
+
+                // 🎯 Reset UI
+                track_btn.Visible = false;
+                ClearOD_btn.Visible = false;
+
+                VisualPB.Cursor = Cursors.Default;
+                // 🔄 Refresh screen
+                VisualPB.Invalidate();
+
+                // 🧹 Reload clean frame
+                if (lastFrame != null)
+                {
+                    lock (this)
+                    {
+                        VisualPB.Image?.Dispose();
+                        VisualPB.Image = (Bitmap)lastFrame.Clone();
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                HandleException(ex, "Clear Object Detection");
+            }
         }
     }
 }

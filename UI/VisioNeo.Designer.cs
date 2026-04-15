@@ -72,6 +72,8 @@
             exposureTrackBar = new TrackBar();
             Tools = new TabPage();
             ToolsPanel = new Panel();
+            ClearOD_btn = new PictureBox();
+            track_btn = new Button();
             objDec_btn = new Button();
             ClearCD_btn = new PictureBox();
             checkCD_btn = new Button();
@@ -83,6 +85,7 @@
             label4 = new Label();
             OCR_btn = new Button();
             Imaging = new TabPage();
+            Res_OD_Lbl = new Label();
             panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)MaximizeBTN).BeginInit();
             ((System.ComponentModel.ISupportInitialize)CloseBTN).BeginInit();
@@ -105,6 +108,7 @@
             ((System.ComponentModel.ISupportInitialize)exposureTrackBar).BeginInit();
             Tools.SuspendLayout();
             ToolsPanel.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)ClearOD_btn).BeginInit();
             ((System.ComponentModel.ISupportInitialize)ClearCD_btn).BeginInit();
             OCR_Panel.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)Resume_btn).BeginInit();
@@ -203,6 +207,7 @@
             panel2.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left;
             panel2.BackgroundImage = (Image)resources.GetObject("panel2.BackgroundImage");
             panel2.BackgroundImageLayout = ImageLayout.Stretch;
+            panel2.Controls.Add(Res_OD_Lbl);
             panel2.Controls.Add(devListTBox);
             panel2.Controls.Add(Res_CD_Lbl);
             panel2.Controls.Add(CnctBTN);
@@ -231,7 +236,7 @@
             Res_CD_Lbl.AutoSize = true;
             Res_CD_Lbl.BackColor = Color.Transparent;
             Res_CD_Lbl.Font = new Font("Segoe UI Semibold", 12F, FontStyle.Bold | FontStyle.Italic, GraphicsUnit.Point, 0);
-            Res_CD_Lbl.Location = new Point(1096, 15);
+            Res_CD_Lbl.Location = new Point(1002, 11);
             Res_CD_Lbl.Name = "Res_CD_Lbl";
             Res_CD_Lbl.Size = new Size(0, 21);
             Res_CD_Lbl.TabIndex = 11;
@@ -370,7 +375,7 @@
             cbDisplayMode.Anchor = AnchorStyles.Top | AnchorStyles.Right;
             cbDisplayMode.FlatStyle = FlatStyle.Popup;
             cbDisplayMode.FormattingEnabled = true;
-            cbDisplayMode.Location = new Point(190, 53);
+            cbDisplayMode.Location = new Point(105, 53);
             cbDisplayMode.Name = "cbDisplayMode";
             cbDisplayMode.Size = new Size(121, 23);
             cbDisplayMode.TabIndex = 34;
@@ -406,7 +411,7 @@
             lblFPS.AutoSize = true;
             lblFPS.Font = new Font("Calibri", 12F, FontStyle.Bold | FontStyle.Italic);
             lblFPS.ForeColor = SystemColors.Highlight;
-            lblFPS.Location = new Point(294, 619);
+            lblFPS.Location = new Point(209, 619);
             lblFPS.Name = "lblFPS";
             lblFPS.Size = new Size(17, 19);
             lblFPS.TabIndex = 31;
@@ -431,7 +436,7 @@
             tbFrameRate.Location = new Point(39, 650);
             tbFrameRate.Minimum = 1;
             tbFrameRate.Name = "tbFrameRate";
-            tbFrameRate.Size = new Size(287, 45);
+            tbFrameRate.Size = new Size(202, 45);
             tbFrameRate.SmallChange = 5;
             tbFrameRate.TabIndex = 29;
             tbFrameRate.Value = 1;
@@ -443,7 +448,7 @@
             lblSaturation.AutoSize = true;
             lblSaturation.Font = new Font("Calibri", 12F, FontStyle.Bold | FontStyle.Italic);
             lblSaturation.ForeColor = SystemColors.Highlight;
-            lblSaturation.Location = new Point(294, 532);
+            lblSaturation.Location = new Point(209, 532);
             lblSaturation.Name = "lblSaturation";
             lblSaturation.Size = new Size(17, 19);
             lblSaturation.TabIndex = 28;
@@ -468,7 +473,7 @@
             tbSaturation.Location = new Point(39, 563);
             tbSaturation.Minimum = 1;
             tbSaturation.Name = "tbSaturation";
-            tbSaturation.Size = new Size(287, 45);
+            tbSaturation.Size = new Size(202, 45);
             tbSaturation.SmallChange = 5;
             tbSaturation.TabIndex = 26;
             tbSaturation.Value = 1;
@@ -480,7 +485,7 @@
             lblSharpness.AutoSize = true;
             lblSharpness.Font = new Font("Calibri", 12F, FontStyle.Bold | FontStyle.Italic);
             lblSharpness.ForeColor = SystemColors.Highlight;
-            lblSharpness.Location = new Point(294, 441);
+            lblSharpness.Location = new Point(209, 441);
             lblSharpness.Name = "lblSharpness";
             lblSharpness.Size = new Size(17, 19);
             lblSharpness.TabIndex = 25;
@@ -505,7 +510,7 @@
             tbSharpness.Location = new Point(39, 472);
             tbSharpness.Minimum = 1;
             tbSharpness.Name = "tbSharpness";
-            tbSharpness.Size = new Size(287, 45);
+            tbSharpness.Size = new Size(202, 45);
             tbSharpness.SmallChange = 5;
             tbSharpness.TabIndex = 23;
             tbSharpness.Value = 1;
@@ -517,7 +522,7 @@
             lblContrast.AutoSize = true;
             lblContrast.Font = new Font("Calibri", 12F, FontStyle.Bold | FontStyle.Italic);
             lblContrast.ForeColor = SystemColors.Highlight;
-            lblContrast.Location = new Point(294, 352);
+            lblContrast.Location = new Point(209, 352);
             lblContrast.Name = "lblContrast";
             lblContrast.Size = new Size(17, 19);
             lblContrast.TabIndex = 22;
@@ -542,7 +547,7 @@
             tbContrast.Location = new Point(39, 383);
             tbContrast.Minimum = 1;
             tbContrast.Name = "tbContrast";
-            tbContrast.Size = new Size(287, 45);
+            tbContrast.Size = new Size(202, 45);
             tbContrast.SmallChange = 5;
             tbContrast.TabIndex = 20;
             tbContrast.Value = 1;
@@ -554,7 +559,7 @@
             lblBrightness.AutoSize = true;
             lblBrightness.Font = new Font("Calibri", 12F, FontStyle.Bold | FontStyle.Italic);
             lblBrightness.ForeColor = SystemColors.Highlight;
-            lblBrightness.Location = new Point(294, 265);
+            lblBrightness.Location = new Point(209, 265);
             lblBrightness.Name = "lblBrightness";
             lblBrightness.Size = new Size(17, 19);
             lblBrightness.TabIndex = 19;
@@ -567,7 +572,7 @@
             tbBrightness.Location = new Point(39, 296);
             tbBrightness.Minimum = 1;
             tbBrightness.Name = "tbBrightness";
-            tbBrightness.Size = new Size(287, 45);
+            tbBrightness.Size = new Size(202, 45);
             tbBrightness.SmallChange = 5;
             tbBrightness.TabIndex = 17;
             tbBrightness.Value = 1;
@@ -579,7 +584,7 @@
             Gain_lbl.AutoSize = true;
             Gain_lbl.Font = new Font("Calibri", 12F, FontStyle.Bold | FontStyle.Italic);
             Gain_lbl.ForeColor = SystemColors.Highlight;
-            Gain_lbl.Location = new Point(294, 179);
+            Gain_lbl.Location = new Point(209, 179);
             Gain_lbl.Name = "Gain_lbl";
             Gain_lbl.Size = new Size(17, 19);
             Gain_lbl.TabIndex = 16;
@@ -591,7 +596,7 @@
             Exp_lbl.AutoSize = true;
             Exp_lbl.Font = new Font("Calibri", 12F, FontStyle.Bold | FontStyle.Italic);
             Exp_lbl.ForeColor = SystemColors.Highlight;
-            Exp_lbl.Location = new Point(294, 100);
+            Exp_lbl.Location = new Point(209, 100);
             Exp_lbl.Name = "Exp_lbl";
             Exp_lbl.Size = new Size(17, 19);
             Exp_lbl.TabIndex = 15;
@@ -639,7 +644,7 @@
             gainTrackBar.BackColor = SystemColors.ControlLightLight;
             gainTrackBar.Location = new Point(33, 217);
             gainTrackBar.Name = "gainTrackBar";
-            gainTrackBar.Size = new Size(287, 45);
+            gainTrackBar.Size = new Size(202, 45);
             gainTrackBar.SmallChange = 10;
             gainTrackBar.TabIndex = 1;
             gainTrackBar.Scroll += gainTrackBar_Scroll;
@@ -651,7 +656,7 @@
             exposureTrackBar.Location = new Point(33, 131);
             exposureTrackBar.Minimum = 1;
             exposureTrackBar.Name = "exposureTrackBar";
-            exposureTrackBar.Size = new Size(287, 45);
+            exposureTrackBar.Size = new Size(202, 45);
             exposureTrackBar.SmallChange = 5;
             exposureTrackBar.TabIndex = 0;
             exposureTrackBar.Value = 1;
@@ -677,6 +682,8 @@
             ToolsPanel.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
             ToolsPanel.AutoScroll = true;
             ToolsPanel.BackColor = Color.White;
+            ToolsPanel.Controls.Add(ClearOD_btn);
+            ToolsPanel.Controls.Add(track_btn);
             ToolsPanel.Controls.Add(objDec_btn);
             ToolsPanel.Controls.Add(ClearCD_btn);
             ToolsPanel.Controls.Add(checkCD_btn);
@@ -688,6 +695,33 @@
             ToolsPanel.Name = "ToolsPanel";
             ToolsPanel.Size = new Size(363, 655);
             ToolsPanel.TabIndex = 0;
+            // 
+            // ClearOD_btn
+            // 
+            ClearOD_btn.Anchor = AnchorStyles.Top | AnchorStyles.Right;
+            ClearOD_btn.BackColor = Color.Transparent;
+            ClearOD_btn.Image = (Image)resources.GetObject("ClearOD_btn.Image");
+            ClearOD_btn.Location = new Point(199, 146);
+            ClearOD_btn.Name = "ClearOD_btn";
+            ClearOD_btn.Size = new Size(25, 25);
+            ClearOD_btn.SizeMode = PictureBoxSizeMode.StretchImage;
+            ClearOD_btn.TabIndex = 15;
+            ClearOD_btn.TabStop = false;
+            ClearOD_btn.Click += ClearOD_btn_Click;
+            // 
+            // track_btn
+            // 
+            track_btn.BackgroundImageLayout = ImageLayout.None;
+            track_btn.FlatStyle = FlatStyle.Flat;
+            track_btn.Font = new Font("Segoe UI", 9.75F, FontStyle.Bold | FontStyle.Italic, GraphicsUnit.Point, 0);
+            track_btn.Location = new Point(138, 141);
+            track_btn.Name = "track_btn";
+            track_btn.Size = new Size(55, 37);
+            track_btn.TabIndex = 14;
+            track_btn.Text = "Track";
+            track_btn.TextAlign = ContentAlignment.MiddleLeft;
+            track_btn.UseVisualStyleBackColor = true;
+            track_btn.Click += track_btn_Click;
             // 
             // objDec_btn
             // 
@@ -701,6 +735,7 @@
             objDec_btn.Text = "Object Detection";
             objDec_btn.TextAlign = ContentAlignment.MiddleLeft;
             objDec_btn.UseVisualStyleBackColor = true;
+            objDec_btn.Click += objDec_btn_Click;
             // 
             // ClearCD_btn
             // 
@@ -829,6 +864,16 @@
             Imaging.TabIndex = 2;
             Imaging.Text = "Imaging";
             // 
+            // Res_OD_Lbl
+            // 
+            Res_OD_Lbl.AutoSize = true;
+            Res_OD_Lbl.BackColor = Color.Transparent;
+            Res_OD_Lbl.Font = new Font("Segoe UI Semibold", 12F, FontStyle.Bold | FontStyle.Italic, GraphicsUnit.Point, 0);
+            Res_OD_Lbl.Location = new Point(681, 14);
+            Res_OD_Lbl.Name = "Res_OD_Lbl";
+            Res_OD_Lbl.Size = new Size(0, 21);
+            Res_OD_Lbl.TabIndex = 12;
+            // 
             // VisioNeo
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
@@ -867,6 +912,7 @@
             Tools.ResumeLayout(false);
             ToolsPanel.ResumeLayout(false);
             ToolsPanel.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)ClearOD_btn).EndInit();
             ((System.ComponentModel.ISupportInitialize)ClearCD_btn).EndInit();
             OCR_Panel.ResumeLayout(false);
             OCR_Panel.PerformLayout();
@@ -930,5 +976,8 @@
         private Button checkCD_btn;
         private PictureBox ClearCD_btn;
         private Button objDec_btn;
+        private Button track_btn;
+        private PictureBox ClearOD_btn;
+        private Label Res_OD_Lbl;
     }
 }
