@@ -326,7 +326,6 @@
                                             centerX, centerY);
                                     }
                                 }
-
                                 // 🔥 UPDATE LABEL (IMPORTANT: UI THREAD)
                                 VisualPB.Invoke(() =>
                                 {
@@ -1116,7 +1115,6 @@
         {
             try
             {
-                Res_OD_Lbl.Visible = false;
                 Res_OD_Lbl.Text = "Result : ---";
                 Res_OD_Lbl.ForeColor = Color.Black;
                 // 🔥 Clear object data
