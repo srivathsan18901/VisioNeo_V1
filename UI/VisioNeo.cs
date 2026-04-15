@@ -13,11 +13,9 @@
         MyCamera.MV_CC_DEVICE_INFO_LIST deviceList;
         bool isConnected = false;
         private OCRService ocrService = new OCRService();
-        private string lastDetectedText = "";
         private Bitmap lastFrame = null;
         private bool isFrozen = false;
         private bool isHandlingException = false;
-
         // Color Detection
         private bool isDrawing = false;
         private bool isTeachMode = false;
@@ -26,10 +24,8 @@
         private List<Rectangle> roiList = new List<Rectangle>();
         private List<Color> taughtColors = new List<Color>();
         private List<string> roiLabels = new List<string>();
-
         private Rectangle currentROI; // 🔥 for drawing only
         private List<bool> roiResults = new List<bool>(); // 🔥 PASS/FAIL per ROI
-
 
         public VisioNeo()
         {
@@ -661,6 +657,7 @@
 
             AddROIAndTeach();   // 🔥 IMPORTANT
         }
+
         private void VisualPB_Paint(object sender, PaintEventArgs e)
         {
             for (int i = 0; i < roiList.Count; i++)
