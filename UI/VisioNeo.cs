@@ -23,12 +23,10 @@
         private Point startPoint;
         private List<Rectangle> roiList = new List<Rectangle>();
         private List<Color> taughtColors = new List<Color>();
-        private List<string> roiLabels = new List<string>();
         private Rectangle currentROI; // 🔥 for drawing only
-        private List<bool> roiResults = new List<bool>(); // 🔥 PASS/FAIL per ROI
 
         private ObjectDetectionService objService = new ObjectDetectionService();
-
+        private int roiCounter = 1;
         private bool isObjectTeachMode = false;
         private bool isTrackingMode = false;
 
@@ -36,6 +34,9 @@
         private List<string> objLabels = new List<string>();
         private Point taughtCenter;   // reference point
         private double pixelToMM = 0.05; // 🔥 change based on calibration
+
+        private List<string> roiLabels = new List<string>();
+        private List<bool> roiResults = new List<bool>();
 
         public VisioNeo()
         {
@@ -52,7 +53,7 @@
             OCR_Panel.Visible = false;
             track_btn.Visible = false;
             ClearOD_btn.Visible = false;
-
+            CD_Panel.Visible = false;
             //TabCntl.Visible = false;
             VisualPB.SizeMode = PictureBoxSizeMode.StretchImage;
 
@@ -683,6 +684,7 @@
                 isHandlingException = false;
             }
         }
+
         private void CD_Btn_Click(object sender, EventArgs e)
         {
             if (lastFrame == null)
@@ -694,6 +696,11 @@
             isFrozen = true;
             isTeachMode = true;
             isInspectionMode = false;
+            CD_Panel.Visible = true;
+
+            dgvCD.Rows.Clear();
+            roiCounter = 1;
+            ClearCD_btn.Visible = true;
 
             VisualPB.Cursor = Cursors.Cross;
         }
@@ -785,7 +792,7 @@
             currentROI = Rectangle.Empty;
 
             // 🔥 IMPORTANT FIX
-            isFrozen = false;   // resume live camera
+            isFrozen = true;   // resume live camera
 
             isObjectTeachMode = false; // stop teaching mode
 
@@ -859,13 +866,22 @@
                 // ✅ STORE MULTIPLE
                 roiList.Add(currentROI);
                 taughtColors.Add(color);
-                roiLabels.Add($"R{color.R} G{color.G} B{color.B}");
+                string roiName = $"A{roiCounter++}";
+
+                roiLabels.Add(roiName);
                 roiResults.Add(true);
+
+                // ✅ Add to TABLE
+                dgvCD.Rows.Add(
+                    roiName,
+                    $"R:{color.R} G:{color.G} B:{color.B}",
+                    "PASS"
+                );
 
                 // reset current ROI so next draw starts fresh
                 currentROI = Rectangle.Empty;
 
-                isFrozen = false;
+                isFrozen = true;
                 isTeachMode = true; // 🔥 KEEP DRAW MODE ACTIVE
 
                 VisualPB.Invalidate();
@@ -939,7 +955,7 @@
                 }
 
                 // 🔒 Freeze current frame
-                //isFrozen = true;
+                isFrozen = false;
                 bool overallPass = true;
 
                 Bitmap bmp;
@@ -957,6 +973,10 @@
 
                     bool isPass = diff < 40;
                     roiResults[i] = isPass;
+                    dgvCD.Rows[i].Cells[2].Value = isPass ? "PASS" : "FAIL";
+
+                    // Optional color highlight
+                    dgvCD.Rows[i].Cells[2].Style.ForeColor = isPass ? Color.Green : Color.Red;
                     if (!isPass)
                         overallPass = false;
 
@@ -1017,6 +1037,12 @@
 
                 // 🔓 Resume live camera
                 isFrozen = false;
+                dgvCD.Rows.Clear();
+                roiCounter = 1;
+
+                // ✅ HIDE PANEL
+                CD_Panel.Visible = false;
+
                 checkCD_btn.Visible = false;
                 ClearCD_btn.Visible = false;
 
