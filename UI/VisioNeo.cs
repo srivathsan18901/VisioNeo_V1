@@ -1181,5 +1181,10 @@
                 HandleException(ex, "Clear Object Detection");
             }
         }
+
+        private void dgvCD_CellContentClick(object sender, DataGridViewCellEventArgs e)
+        {
+
+        }
     }
 }
