@@ -330,12 +330,12 @@
                                 // 🔥 UPDATE LABEL (IMPORTANT: UI THREAD)
                                 VisualPB.Invoke(() =>
                                 {
-                                    Res_OD_Lbl.Text =
+                                    Res_CD_Lbl.Text =
                                        $"Ref: ({taughtCenter.X},{taughtCenter.Y})  |  " +
                                        $"Cur: ({centerX},{centerY})  |  " +
                                        $"DX: {dxMM:F2} mm  DY: {dyMM:F2} mm  |  Dist: {distanceMM:F2} mm";
 
-                                    Res_OD_Lbl.ForeColor = isOK ? Color.Green : Color.Red;
+                                    Res_CD_Lbl.ForeColor = isOK ? Color.Green : Color.Red;
                                 });
                             }
                         }
@@ -1046,9 +1046,8 @@
                 checkCD_btn.Visible = false;
                 ClearCD_btn.Visible = false;
 
-                // 🎯 Reset UI
-                //Res_CD_Lbl.Text = "Result : ---";
-                //Res_CD_Lbl.ForeColor = Color.Black;
+                Res_CD_Lbl.Text = "";               // ✅ clear completely
+                Res_CD_Lbl.ForeColor = Color.Black; // optional reset
 
                 VisualPB.Cursor = Cursors.Default;
 
@@ -1141,8 +1140,7 @@
         {
             try
             {
-                Res_OD_Lbl.Text = "Result : ---";
-                Res_OD_Lbl.ForeColor = Color.Black;
+
                 // 🔥 Clear object data
                 objRois.Clear();
                 objLabels.Clear();
@@ -1164,7 +1162,8 @@
 
                 VisualPB.Cursor = Cursors.Default;
                 // 🔄 Refresh screen
-                VisualPB.Invalidate();
+                VisualPB.Invalidate(); Res_CD_Lbl.Text = "";               // ✅ same label used
+                Res_CD_Lbl.ForeColor = Color.Black;
 
                 // 🧹 Reload clean frame
                 if (lastFrame != null)

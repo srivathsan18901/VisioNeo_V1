@@ -37,7 +37,6 @@
             pictureBox1 = new PictureBox();
             VisualPB = new PictureBox();
             panel2 = new Panel();
-            Res_OD_Lbl = new Label();
             devListTBox = new ListBox();
             Res_CD_Lbl = new Label();
             CnctBTN = new Button();
@@ -217,7 +216,6 @@
             panel2.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left;
             panel2.BackgroundImage = (Image)resources.GetObject("panel2.BackgroundImage");
             panel2.BackgroundImageLayout = ImageLayout.Stretch;
-            panel2.Controls.Add(Res_OD_Lbl);
             panel2.Controls.Add(devListTBox);
             panel2.Controls.Add(Res_CD_Lbl);
             panel2.Controls.Add(CnctBTN);
@@ -228,16 +226,6 @@
             panel2.Name = "panel2";
             panel2.Size = new Size(1257, 699);
             panel2.TabIndex = 2;
-            // 
-            // Res_OD_Lbl
-            // 
-            Res_OD_Lbl.AutoSize = true;
-            Res_OD_Lbl.BackColor = Color.Transparent;
-            Res_OD_Lbl.Font = new Font("Segoe UI Semibold", 8F, FontStyle.Bold | FontStyle.Italic);
-            Res_OD_Lbl.Location = new Point(674, 21);
-            Res_OD_Lbl.Name = "Res_OD_Lbl";
-            Res_OD_Lbl.Size = new Size(0, 13);
-            Res_OD_Lbl.TabIndex = 12;
             // 
             // devListTBox
             // 
@@ -395,7 +383,7 @@
             cbDisplayMode.Anchor = AnchorStyles.Top | AnchorStyles.Right;
             cbDisplayMode.FlatStyle = FlatStyle.Popup;
             cbDisplayMode.FormattingEnabled = true;
-            cbDisplayMode.Location = new Point(164, 53);
+            cbDisplayMode.Location = new Point(147, 53);
             cbDisplayMode.Name = "cbDisplayMode";
             cbDisplayMode.Size = new Size(121, 23);
             cbDisplayMode.TabIndex = 34;
@@ -431,7 +419,7 @@
             lblFPS.AutoSize = true;
             lblFPS.Font = new Font("Calibri", 12F, FontStyle.Bold | FontStyle.Italic);
             lblFPS.ForeColor = SystemColors.Highlight;
-            lblFPS.Location = new Point(268, 619);
+            lblFPS.Location = new Point(251, 619);
             lblFPS.Name = "lblFPS";
             lblFPS.Size = new Size(17, 19);
             lblFPS.TabIndex = 31;
@@ -456,7 +444,7 @@
             tbFrameRate.Location = new Point(15, 650);
             tbFrameRate.Minimum = 1;
             tbFrameRate.Name = "tbFrameRate";
-            tbFrameRate.Size = new Size(270, 45);
+            tbFrameRate.Size = new Size(253, 45);
             tbFrameRate.SmallChange = 5;
             tbFrameRate.TabIndex = 29;
             tbFrameRate.Value = 1;
@@ -468,7 +456,7 @@
             lblSaturation.AutoSize = true;
             lblSaturation.Font = new Font("Calibri", 12F, FontStyle.Bold | FontStyle.Italic);
             lblSaturation.ForeColor = SystemColors.Highlight;
-            lblSaturation.Location = new Point(268, 532);
+            lblSaturation.Location = new Point(251, 532);
             lblSaturation.Name = "lblSaturation";
             lblSaturation.Size = new Size(17, 19);
             lblSaturation.TabIndex = 28;
@@ -493,7 +481,7 @@
             tbSaturation.Location = new Point(15, 563);
             tbSaturation.Minimum = 1;
             tbSaturation.Name = "tbSaturation";
-            tbSaturation.Size = new Size(270, 45);
+            tbSaturation.Size = new Size(253, 45);
             tbSaturation.SmallChange = 5;
             tbSaturation.TabIndex = 26;
             tbSaturation.Value = 1;
@@ -505,7 +493,7 @@
             lblSharpness.AutoSize = true;
             lblSharpness.Font = new Font("Calibri", 12F, FontStyle.Bold | FontStyle.Italic);
             lblSharpness.ForeColor = SystemColors.Highlight;
-            lblSharpness.Location = new Point(268, 441);
+            lblSharpness.Location = new Point(251, 441);
             lblSharpness.Name = "lblSharpness";
             lblSharpness.Size = new Size(17, 19);
             lblSharpness.TabIndex = 25;
@@ -530,7 +518,7 @@
             tbSharpness.Location = new Point(15, 472);
             tbSharpness.Minimum = 1;
             tbSharpness.Name = "tbSharpness";
-            tbSharpness.Size = new Size(270, 45);
+            tbSharpness.Size = new Size(253, 45);
             tbSharpness.SmallChange = 5;
             tbSharpness.TabIndex = 23;
             tbSharpness.Value = 1;
@@ -542,7 +530,7 @@
             lblContrast.AutoSize = true;
             lblContrast.Font = new Font("Calibri", 12F, FontStyle.Bold | FontStyle.Italic);
             lblContrast.ForeColor = SystemColors.Highlight;
-            lblContrast.Location = new Point(268, 352);
+            lblContrast.Location = new Point(251, 352);
             lblContrast.Name = "lblContrast";
             lblContrast.Size = new Size(17, 19);
             lblContrast.TabIndex = 22;
@@ -567,7 +555,7 @@
             tbContrast.Location = new Point(15, 383);
             tbContrast.Minimum = 1;
             tbContrast.Name = "tbContrast";
-            tbContrast.Size = new Size(270, 45);
+            tbContrast.Size = new Size(253, 45);
             tbContrast.SmallChange = 5;
             tbContrast.TabIndex = 20;
             tbContrast.Value = 1;
@@ -579,7 +567,7 @@
             lblBrightness.AutoSize = true;
             lblBrightness.Font = new Font("Calibri", 12F, FontStyle.Bold | FontStyle.Italic);
             lblBrightness.ForeColor = SystemColors.Highlight;
-            lblBrightness.Location = new Point(268, 265);
+            lblBrightness.Location = new Point(251, 265);
             lblBrightness.Name = "lblBrightness";
             lblBrightness.Size = new Size(17, 19);
             lblBrightness.TabIndex = 19;
@@ -592,7 +580,7 @@
             tbBrightness.Location = new Point(15, 296);
             tbBrightness.Minimum = 1;
             tbBrightness.Name = "tbBrightness";
-            tbBrightness.Size = new Size(270, 45);
+            tbBrightness.Size = new Size(253, 45);
             tbBrightness.SmallChange = 5;
             tbBrightness.TabIndex = 17;
             tbBrightness.Value = 1;
@@ -604,7 +592,7 @@
             Gain_lbl.AutoSize = true;
             Gain_lbl.Font = new Font("Calibri", 12F, FontStyle.Bold | FontStyle.Italic);
             Gain_lbl.ForeColor = SystemColors.Highlight;
-            Gain_lbl.Location = new Point(268, 179);
+            Gain_lbl.Location = new Point(251, 179);
             Gain_lbl.Name = "Gain_lbl";
             Gain_lbl.Size = new Size(17, 19);
             Gain_lbl.TabIndex = 16;
@@ -616,7 +604,7 @@
             Exp_lbl.AutoSize = true;
             Exp_lbl.Font = new Font("Calibri", 12F, FontStyle.Bold | FontStyle.Italic);
             Exp_lbl.ForeColor = SystemColors.Highlight;
-            Exp_lbl.Location = new Point(268, 100);
+            Exp_lbl.Location = new Point(251, 100);
             Exp_lbl.Name = "Exp_lbl";
             Exp_lbl.Size = new Size(17, 19);
             Exp_lbl.TabIndex = 15;
@@ -664,7 +652,7 @@
             gainTrackBar.BackColor = SystemColors.ControlLightLight;
             gainTrackBar.Location = new Point(9, 212);
             gainTrackBar.Name = "gainTrackBar";
-            gainTrackBar.Size = new Size(270, 45);
+            gainTrackBar.Size = new Size(253, 45);
             gainTrackBar.SmallChange = 10;
             gainTrackBar.TabIndex = 1;
             gainTrackBar.Scroll += gainTrackBar_Scroll;
@@ -676,7 +664,7 @@
             exposureTrackBar.Location = new Point(9, 131);
             exposureTrackBar.Minimum = 1;
             exposureTrackBar.Name = "exposureTrackBar";
-            exposureTrackBar.Size = new Size(270, 45);
+            exposureTrackBar.Size = new Size(253, 45);
             exposureTrackBar.SmallChange = 5;
             exposureTrackBar.TabIndex = 0;
             exposureTrackBar.Value = 1;
@@ -1053,7 +1041,6 @@
         private Button objDec_btn;
         private Button track_btn;
         private PictureBox ClearOD_btn;
-        private Label Res_OD_Lbl;
         private Panel CD_Panel;
         private DataGridView dgvCD;
         private PictureBox pictureBox3;
