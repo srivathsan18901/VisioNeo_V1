@@ -1083,7 +1083,7 @@
                 return;
             }
 
-            isFrozen = true;
+            //isFrozen = true;
 
             isObjectTeachMode = true;
             isTrackingMode = false;
@@ -1156,14 +1156,17 @@
                 // 🔓 Resume live camera
                 isFrozen = false;
 
+                Res_CD_Lbl.Text = "";               // ✅ same label used
+                Res_CD_Lbl.ForeColor = Color.Black;
+
                 // 🎯 Reset UI
                 track_btn.Visible = false;
                 ClearOD_btn.Visible = false;
 
                 VisualPB.Cursor = Cursors.Default;
                 // 🔄 Refresh screen
-                VisualPB.Invalidate(); Res_CD_Lbl.Text = "";               // ✅ same label used
-                Res_CD_Lbl.ForeColor = Color.Black;
+                VisualPB.Invalidate();
+
 
                 // 🧹 Reload clean frame
                 if (lastFrame != null)

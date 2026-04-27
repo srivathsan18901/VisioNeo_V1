@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("VisioNeo_App")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+f06fae3410fe4ccb467fdfaea80bdf5572a188e9")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+5a1e418841f51bd92b9ecb366c52000d2fd24f58")]
 [assembly: System.Reflection.AssemblyProductAttribute("VisioNeo_App")]
 [assembly: System.Reflection.AssemblyTitleAttribute("VisioNeo_App")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
