@@ -372,12 +372,12 @@
                             lastFrame = (Bitmap)outputFrame.Clone();
                         }
 
-                        VisualPB.Invoke(() =>
+                        VisualPB.BeginInvoke((Action)(() =>
                         {
                             var old = VisualPB.Image;
                             VisualPB.Image = outputFrame;
-                            old?.Dispose();   // 🔥 SAFE ORDER
-                        });
+                            old?.Dispose();
+                        }));
                     }
                     catch (Exception ex)
                     {
