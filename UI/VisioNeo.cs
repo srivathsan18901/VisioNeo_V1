@@ -29,6 +29,9 @@
         private int roiCounter = 1;
         private bool isObjectTeachMode = false;
         private bool isTrackingMode = false;
+        // 🔥 Calibration Mode
+        private bool isCalibrationMode = false;
+        private List<Point> calibPoints = new List<Point>();
 
         private List<Rectangle> objRois = new List<Rectangle>();
         private List<string> objLabels = new List<string>();
@@ -707,6 +710,23 @@
 
         private void VisualPB_MouseDown(object sender, MouseEventArgs e)
         {
+            if (isCalibrationMode)
+            {
+                calibPoints.Add(e.Location);
+
+                if (calibPoints.Count == 1)
+                {
+                    Res_CD_Lbl.Text = "Select Point 2";
+                }
+                else if (calibPoints.Count == 2)
+                {
+                    CalculatePixelToMM();
+                }
+
+                VisualPB.Invalidate();
+                return;
+            }
+
             if (!isTeachMode && !isObjectTeachMode) return;
 
             isDrawing = true;
@@ -823,6 +843,24 @@
                     e.Graphics.DrawString($"{label} ({resultText})", font, textBrush, roi.X, roi.Y - 12);
                 }
             }
+
+            if (calibPoints.Count > 0)
+            {
+                using (Pen pen = new Pen(Color.Yellow, 2))
+                using (Brush brush = new SolidBrush(Color.Yellow))
+                {
+                    foreach (var p in calibPoints)
+                    {
+                        e.Graphics.FillEllipse(brush, p.X - 4, p.Y - 4, 8, 8);
+                    }
+
+                    if (calibPoints.Count == 2)
+                    {
+                        e.Graphics.DrawLine(pen, calibPoints[0], calibPoints[1]);
+                    }
+                }
+            }
+
             // 🔵 Draw current ROI while dragging
             if (isDrawing && currentROI != Rectangle.Empty)
             {
@@ -1140,7 +1178,6 @@
         {
             try
             {
-
                 // 🔥 Clear object data
                 objRois.Clear();
                 objLabels.Clear();
@@ -1153,10 +1190,19 @@
                 isTrackingMode = false;
                 isDrawing = false;
 
+                // =========================
+                // 🔥 NEW: RESET CALIBRATION
+                // =========================
+                isCalibrationMode = false;
+                calibPoints.Clear();
+
+                pixelToMM = 0.0; // or default like 0.05 if you prefer
+
                 // 🔓 Resume live camera
                 isFrozen = false;
 
-                Res_CD_Lbl.Text = "";               // ✅ same label used
+                // 🔥 Clear label
+                Res_CD_Lbl.Text = "";
                 Res_CD_Lbl.ForeColor = Color.Black;
 
                 // 🎯 Reset UI
@@ -1164,9 +1210,9 @@
                 ClearOD_btn.Visible = false;
 
                 VisualPB.Cursor = Cursors.Default;
+
                 // 🔄 Refresh screen
                 VisualPB.Invalidate();
-
 
                 // 🧹 Reload clean frame
                 if (lastFrame != null)
@@ -1187,6 +1233,54 @@
         private void dgvCD_CellContentClick(object sender, DataGridViewCellEventArgs e)
         {
 
+        }
+
+        private void Res_btn_Click(object sender, EventArgs e)
+        {
+            if (lastFrame == null)
+            {
+                MessageBox.Show("No frame available!");
+                return;
+            }
+
+            isFrozen = true;
+            isCalibrationMode = true;
+            calibPoints.Clear();
+
+            VisualPB.Cursor = Cursors.Cross;
+            ClearOD_btn.Visible = true;
+
+            Res_CD_Lbl.Text = "Select Point 1";
+        }
+
+        private void CalculatePixelToMM()
+        {
+            if (calibPoints.Count < 2) return;
+
+            Point p1 = calibPoints[0];
+            Point p2 = calibPoints[1];
+
+            double dx = p2.X - p1.X;
+            double dy = p2.Y - p1.Y;
+
+            double pixelDistance = Math.Sqrt(dx * dx + dy * dy);
+
+            // 🔥 Ask user for real distance
+            string input = Prompt.ShowDialog("Enter real distance (mm):", "Calibration");
+
+            if (!double.TryParse(input, out double realDistance) || realDistance <= 0)
+            {
+                MessageBox.Show("Invalid input!");
+                return;
+            }
+
+            pixelToMM = realDistance / pixelDistance;
+
+            Res_CD_Lbl.Text = $"pixelToMM = {pixelToMM:F5} mm/pixel";
+
+            // 🔥 Reset mode
+            isCalibrationMode = false;
+            VisualPB.Cursor = Cursors.Default;
         }
     }
 }
