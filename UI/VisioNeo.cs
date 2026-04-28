@@ -5,6 +5,7 @@
     using System.Runtime.InteropServices;
     using VisioNeo_App.Services;
 
+
     public partial class VisioNeo : Form
     {
         private CameraService cameraService = new CameraService();
@@ -14,6 +15,7 @@
         bool isConnected = false;
         private OCRService ocrService = new OCRService();
         private Bitmap lastFrame = null;
+        private readonly object frameLock = new object();
         private bool isFrozen = false;
         private bool isHandlingException = false;
         // Color Detection
@@ -40,6 +42,7 @@
 
         private List<string> roiLabels = new List<string>();
         private List<bool> roiResults = new List<bool>();
+
 
         public VisioNeo()
         {
@@ -91,6 +94,12 @@
             VisualPB.MouseMove += VisualPB_MouseMove;
             VisualPB.MouseUp += VisualPB_MouseUp;
             VisualPB.Paint += VisualPB_Paint;
+
+            typeof(PictureBox).InvokeMember("DoubleBuffered",
+                System.Reflection.BindingFlags.NonPublic |
+                System.Reflection.BindingFlags.Instance |
+                System.Reflection.BindingFlags.SetProperty,
+                null, VisualPB, new object[] { true });
         }
 
         private void OnApplicationExit(object sender, EventArgs e)
@@ -278,11 +287,11 @@
                     try
                     {
                         if (isFrozen) return;
-
+                        Bitmap outputFrame;
                         if (isTrackingMode)
                         {
                             Rectangle tracked = objService.MatchTemplate(frame);
-
+                            outputFrame = (Bitmap)frame.Clone();
                             if (tracked != Rectangle.Empty)
                             {
                                 int centerX = tracked.X + tracked.Width / 2;
@@ -300,7 +309,9 @@
 
                                 bool isOK = distanceMM < tolerance;
 
-                                using (Graphics g = Graphics.FromImage(frame))
+                                Bitmap drawFrame = (Bitmap)frame.Clone();
+
+                                using (Graphics g = Graphics.FromImage(outputFrame))
                                 {
                                     // 🟡 Draw tracked object
                                     using (Pen pen = new Pen(isOK ? Color.Lime : Color.Red, 3))
@@ -333,28 +344,39 @@
                                 // 🔥 UPDATE LABEL (IMPORTANT: UI THREAD)
                                 VisualPB.Invoke(() =>
                                 {
-                                    Res_CD_Lbl.Text =
-                                       $"Ref: ({taughtCenter.X},{taughtCenter.Y})  |  " +
-                                       $"Cur: ({centerX},{centerY})  |  " +
-                                       $"DX: {dxMM:F2} mm  DY: {dyMM:F2} mm  |  Dist: {distanceMM:F2} mm";
+                                    //VisualPB.Image?.Dispose();
+                                    //VisualPB.Image = drawFrame;
+                                    if (!isObjectTeachMode && !isTrackingMode) { Res_CD_Lbl.Text = ""; }
+                                    else
+                                    {
+                                        Res_CD_Lbl.Text =
+                                           $"Ref: ({taughtCenter.X},{taughtCenter.Y})  |  " +
+                                           $"Cur: ({centerX},{centerY})  |  " +
+                                           $"DX: {dxMM:F2} mm  DY: {dyMM:F2} mm  |  Dist: {distanceMM:F2} mm";
 
-                                    Res_CD_Lbl.ForeColor = isOK ? Color.Green : Color.Red;
+                                        Res_CD_Lbl.ForeColor = isOK ? Color.Green : Color.Red;
+                                    }
+
                                 });
                             }
                         }
 
-                        Bitmap finalImage = imageService.Process(frame, currentDisplayMode);
+                        else
+                        {
+                            outputFrame = imageService.Process(frame, currentDisplayMode);
+                        }
 
-                        lock (this)
+                        lock (frameLock)
                         {
                             lastFrame?.Dispose();
-                            lastFrame = (Bitmap)finalImage.Clone();
+                            lastFrame = (Bitmap)outputFrame.Clone();
                         }
 
                         VisualPB.Invoke(() =>
                         {
-                            VisualPB.Image?.Dispose();
-                            VisualPB.Image = finalImage;
+                            var old = VisualPB.Image;
+                            VisualPB.Image = outputFrame;
+                            old?.Dispose();   // 🔥 SAFE ORDER
                         });
                     }
                     catch (Exception ex)
@@ -710,46 +732,59 @@
 
         private void VisualPB_MouseDown(object sender, MouseEventArgs e)
         {
-            if (isCalibrationMode)
+            try
             {
-                calibPoints.Add(e.Location);
-
-                if (calibPoints.Count == 1)
+                if (isCalibrationMode)
                 {
-                    Res_CD_Lbl.Text = "Select Point 2";
-                }
-                else if (calibPoints.Count == 2)
-                {
-                    CalculatePixelToMM();
+                    calibPoints.Add(e.Location);
+
+                    if (calibPoints.Count == 1)
+                    {
+                        Res_CD_Lbl.Text = "Select Point 2";
+                    }
+                    else if (calibPoints.Count == 2)
+                    {
+                        CalculatePixelToMM();
+                    }
+
+                    VisualPB.Invalidate();
+                    return;
                 }
 
-                VisualPB.Invalidate();
-                return;
+                if (!isTeachMode && !isObjectTeachMode) return;
+
+                isDrawing = true;
+                startPoint = e.Location;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error starting ROI draw: {ex.Message}");
             }
 
-            if (!isTeachMode && !isObjectTeachMode) return;
-
-            isDrawing = true;
-            startPoint = e.Location;
         }
 
         private void VisualPB_MouseMove(object sender, MouseEventArgs e)
         {
-            if (!isDrawing) return;
+            try
+            {
+                if (!isDrawing) return;
 
-            int x = Math.Max(0, Math.Min(startPoint.X, e.X));
-            int y = Math.Max(0, Math.Min(startPoint.Y, e.Y));
+                int x = Math.Max(0, Math.Min(startPoint.X, e.X));
+                int y = Math.Max(0, Math.Min(startPoint.Y, e.Y));
 
-            int w = Math.Abs(startPoint.X - e.X);
-            int h = Math.Abs(startPoint.Y - e.Y);
+                int w = Math.Abs(startPoint.X - e.X);
+                int h = Math.Abs(startPoint.Y - e.Y);
 
-            // 🔥 LIMIT TO PICTUREBOX SIZE
-            w = Math.Min(w, VisualPB.Width - x);
-            h = Math.Min(h, VisualPB.Height - y);
+                if (w < 2 || h < 2) return;
 
-            currentROI = new Rectangle(x, y, w, h);
+                currentROI = new Rectangle(x, y, w, h);
 
-            VisualPB.Invalidate();
+                VisualPB.Invalidate();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error during ROI drawing: {ex.Message}");
+            }
         }
 
         private void VisualPB_MouseUp(object sender, MouseEventArgs e)
@@ -783,7 +818,7 @@
                 return;
 
             Bitmap bmp;
-            lock (this)
+            lock (frameLock)
             {
                 bmp = (Bitmap)lastFrame.Clone();
             }
@@ -812,7 +847,7 @@
             currentROI = Rectangle.Empty;
 
             // 🔥 IMPORTANT FIX
-            isFrozen = true;   // resume live camera
+            isFrozen = false;   // resume live camera
 
             isObjectTeachMode = false; // stop teaching mode
 
@@ -879,8 +914,9 @@
                     return;
 
                 Bitmap bmp;
-                lock (this)
+                lock (frameLock)
                 {
+                    if (lastFrame == null) return;
                     bmp = (Bitmap)lastFrame.Clone();
                 }
 
@@ -997,7 +1033,7 @@
                 bool overallPass = true;
 
                 Bitmap bmp;
-                lock (this)
+                lock (frameLock)
                 {
                     bmp = (Bitmap)lastFrame.Clone();
                 }
@@ -1095,7 +1131,7 @@
                 // 🧹 OPTIONAL: clear current image overlay (reload last frame cleanly)
                 if (lastFrame != null)
                 {
-                    lock (this)
+                    lock (frameLock)
                     {
                         VisualPB.Image?.Dispose();
                         VisualPB.Image = (Bitmap)lastFrame.Clone();
@@ -1217,7 +1253,7 @@
                 // 🧹 Reload clean frame
                 if (lastFrame != null)
                 {
-                    lock (this)
+                    lock (frameLock)
                     {
                         VisualPB.Image?.Dispose();
                         VisualPB.Image = (Bitmap)lastFrame.Clone();
