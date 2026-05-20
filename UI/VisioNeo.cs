@@ -42,7 +42,6 @@
 
         private List<string> roiLabels = new List<string>();
         private List<bool> roiResults = new List<bool>();
-        private bool isDisconnecting = false;
 
 
         public VisioNeo()
@@ -230,13 +229,12 @@
                 try
                 {
                     isConnected = false;
-                    isDisconnecting = true;   // 🔥 block incoming frames
-
                     cameraService.Disconnect();
 
                     VisualPB.Invoke(() =>
                     {
                         VisualPB.Image?.Dispose();
+                        VisualPB.Image = null;
                         Image gif = Properties.Resources.No_Data_Founds;
                         VisualPB.Image = gif;
                         ImageAnimator.Animate(gif, (s, ev) => { VisualPB.Invalidate(); });
@@ -286,7 +284,6 @@
                 // Wrap the frame callback to catch exceptions
                 cameraService.StartGrabbing(frame =>
                 {
-                    if (isDisconnecting) return;
                     try
                     {
                         if (isFrozen) return;
